@@ -8,8 +8,16 @@ public class InstanceVariableList {
        instanceVariableList = new ArrayList<InstanceVariable>();
     }
 
+    public InstanceVariableList(ArrayList<InstanceVariable> instanceVariableList) {
+        this.instanceVariableList = instanceVariableList;
+    }
+
     public void addElement(InstanceVariable instanceVariable) {
-       instanceVariableList.add( instanceVariable );
+       instanceVariableList.add(instanceVariable);
+    }
+
+    public void addInstanceVariableList(InstanceVariableList instanceVariableList) {
+        this.instanceVariableList.addAll(instanceVariableList.getInstanceVariableList());
     }
 
     public Iterator<InstanceVariable> elements() {
@@ -18,6 +26,10 @@ public class InstanceVariableList {
 
     public int getSize() {
         return instanceVariableList.size();
+    }
+
+    public ArrayList<InstanceVariable> getInstanceVariableList() {
+        return instanceVariableList;
     }
 
     private ArrayList<InstanceVariable> instanceVariableList;

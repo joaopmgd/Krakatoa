@@ -1,0 +1,8 @@
+@ce(6, "Testa se '\' n�o � aceito como v�lido", "Unknown character '\'", "lexer.Lexer.nextToken()")
+  
+class Program {
+    private int valor;
+    public void run() {
+      write(34);  //#
+    }
+}
