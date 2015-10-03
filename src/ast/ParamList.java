@@ -2,7 +2,9 @@ package ast;
 
 import java.util.*;
 
-public class ParamList implements Comparable<ParamList> {
+public class ParamList {
+
+    private ArrayList<Variable> paramList;
 
     public ParamList() {
        paramList = new ArrayList<Variable>();
@@ -24,14 +26,11 @@ public class ParamList implements Comparable<ParamList> {
         return paramList;
     }
 
-    private ArrayList<Variable> paramList;
-
-    @Override
-    public int compareTo(ParamList paramList) {
-        if (this == paramList){
-            return 0;
-        }else{
-            return 1;
+    public TypeList getTypeList(){
+        TypeList typeList = new TypeList();
+        for (Variable variable: this.paramList){
+            typeList.addElement(variable.getType());
         }
+        return typeList;
     }
 }

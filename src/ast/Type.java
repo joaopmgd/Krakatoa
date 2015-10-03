@@ -10,8 +10,8 @@ abstract public class Type {
     public static Type intType = new TypeInt();
     public static Type stringType = new TypeString();
     public static Type voidType = new TypeVoid();
-    public Type typeClass = new TypeClass(this.getName());
     public static Type undefinedType = new TypeUndefined();
+
 
 
     public String getName() {

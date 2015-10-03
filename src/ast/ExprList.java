@@ -2,10 +2,12 @@ package ast;
 
 import java.util.*;
 
-public class ExprList {
+public class ExprList{
+
+    private ArrayList<Expr> exprList;
 
     public ExprList() {
-        exprList = new ArrayList<Expr>();
+        this.exprList = new ArrayList<Expr>();
     }
 
     public void addElement( Expr expr ) {
@@ -22,6 +24,11 @@ public class ExprList {
         }
     }
 
-    private ArrayList<Expr> exprList;
-
+    public TypeList getTypeList(){
+        TypeList typeList = new TypeList();
+        for (Expr expr: this.exprList){
+            typeList.addElement(expr.getType());
+        }
+        return typeList;
+    }
 }

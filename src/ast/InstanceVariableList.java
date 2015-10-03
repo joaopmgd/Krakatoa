@@ -4,6 +4,17 @@ import java.util.*;
 
 public class InstanceVariableList {
 
+    private ArrayList<InstanceVariable> instanceVariableList;
+
+    public Type searchStaticInstance(String identifier){
+        for (InstanceVariable instanceVariable: instanceVariableList){
+            if (instanceVariable.getName().equals(identifier) && instanceVariable.isStatic()){
+                return instanceVariable.getType();
+            }
+        }
+        return null;
+    }
+
     public InstanceVariableList() {
        instanceVariableList = new ArrayList<InstanceVariable>();
     }
@@ -31,7 +42,4 @@ public class InstanceVariableList {
     public ArrayList<InstanceVariable> getInstanceVariableList() {
         return instanceVariableList;
     }
-
-    private ArrayList<InstanceVariable> instanceVariableList;
-
 }

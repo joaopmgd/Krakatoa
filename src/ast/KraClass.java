@@ -1,49 +1,56 @@
 package ast;
-
-import javax.swing.plaf.nimbus.State;
-import java.util.ArrayList;
-
 /*
  * Krakatoa Class
  */
 public class KraClass extends Type {
 
    private String name;
-   private KraClass superclass;
-   private boolean still;
-   private boolean finale;
+   private KraClass superClass;
+   private boolean isStatic;
+   private boolean isFinal;
    private InstanceVariableList instanceVariableList;
    private PublicMethodList publicMethodList;
    private PrivateMethodList privateMethodList;
 
-   public KraClass( String name, boolean finale, boolean still ) {
+   public KraClass( String name, boolean isFinal, boolean isStatic ) {
       super(name);
-      this.finale = finale;
-      this.still = still;
-      this.superclass = null;
+      this.isFinal = isFinal;
+      this.isStatic = isStatic;
+      this.superClass = null;
       this.instanceVariableList = new InstanceVariableList();
       this.publicMethodList = new PublicMethodList();
       this.privateMethodList = new PrivateMethodList();
    }
 
-   public boolean isStill() {
-      return still;
+   public boolean isStatic() {
+      return isStatic;
    }
 
-   public boolean isFinale() {
-      return finale;
+   public boolean isFinal() {
+      return isFinal;
    }
 
-   public boolean searchMethods(String name, ParamList paramList, boolean superclass){
-      if (publicMethodList.search(name, paramList)){
-         return true;
+   public Type getMethodType(String methodName, TypeList typeList){
+      Method method = privateMethodList.search(methodName,typeList, isStatic);
+      if (method == null){
+         method = publicMethodList.search(methodName, typeList, isStatic);
       }
+      return method.getType();
+   }
+
+   public KraClass searchMethods(String name, TypeList typeList, boolean isStatic, boolean superclass){
       if(!superclass){
-         if (privateMethodList.search(name,paramList)){
-            return true;
+         if (privateMethodList.search(name,typeList, isStatic) != null){
+            return this;
          }
       }
-      return false;
+      if (publicMethodList.search(name, typeList, isStatic) != null){
+         return this;
+      }
+      if (this.superClass != null && !isStatic){
+         return this.superClass.searchMethods(name, typeList, isStatic, true);
+      }
+      return null;
    }
 
    public String getCname() {
@@ -60,15 +67,15 @@ public class KraClass extends Type {
    }
 
    public String getSuperClassName(){
-      return superclass.getName();
+      return superClass.getName();
    }
 
    public KraClass getSuperclass() {
-      return superclass;
+      return superClass;
    }
 
    public void setSuperclass(KraClass superclass) {
-      this.superclass = superclass;
+      this.superClass = superclass;
    }
 
    public InstanceVariableList getInstanceVariableList() {
@@ -106,5 +113,6 @@ public class KraClass extends Type {
    public void addPrivateMethod(Method method){
       this.privateMethodList.addElement(method);
    }
+
 
 }

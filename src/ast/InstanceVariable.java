@@ -2,31 +2,28 @@ package ast;
 
 public class InstanceVariable extends Variable {
 
-    private boolean still;
-    private boolean finale;
+    private boolean isStatic;
+    private boolean isFinal;
 
-    public boolean isStill() {
-        return still;
+    public boolean isStatic() {
+        return isStatic;
     }
 
-    public void setStill(boolean still) {
-        this.still = still;
+    public void setIsStatic(boolean isStatic) {
+        this.isStatic = isStatic;
     }
 
-    public boolean isFinale() {
-        return finale;
+    public boolean isFinal() {
+        return isFinal;
     }
 
-    public void setFinale(boolean finale) {
-        this.finale = finale;
+    public void setIsFinal(boolean isFinal) {
+        this.isFinal = isFinal;
     }
 
-    public InstanceVariable( Type type, String name, boolean still, boolean finale ) {
+    public InstanceVariable( Type type, String name, boolean isStatic, boolean isFinal ) {
         super(name, type);
-        this.still = still;
-        this.finale = finale;
+        this.isStatic = isStatic;
+        this.isFinal = isFinal;
     }
-
-
-
 }

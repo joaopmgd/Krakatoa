@@ -103,19 +103,19 @@ public class Compiler {
 
 	private KraClass classDec() {
 
-		boolean still = false, finale = false;
+		boolean classIsStatic = false, classIsFinal = false;
 		while (lexer.token == Symbol.STATIC || lexer.token == Symbol.FINAL) {
 			switch (lexer.token){
 				case STATIC:
-					if (!still){
-						still = true;
+					if (!classIsStatic){
+						classIsStatic = true;
 					}else{
 						signalError.show("'static' has already been declared");
 					}
 					break;
 				case FINAL:
-					if (!finale){
-						finale = true;
+					if (!classIsFinal){
+						classIsFinal = true;
 					}else{
 						signalError.show("'final' has already been declared");
 					}
@@ -132,7 +132,7 @@ public class Compiler {
 		if (symbolTable.getInGlobal(className) != null){
 			signalError.show("'"+className+"' has already been declared");
 		}
-		KraClass kraClass = new KraClass(className,finale,still);
+		KraClass kraClass = new KraClass(className,classIsFinal,classIsStatic);
 		symbolTable.putInGlobal(className, kraClass);
 		lexer.nextToken();
 		if ( lexer.token == Symbol.EXTENDS ) {
@@ -144,7 +144,7 @@ public class Compiler {
 			if(superclass == null){
 				signalError.show("'"+superclassName+"' was not declared");
 			}
-			if(superclass.isFinale()){
+			if(superclass != null && superclass.isFinal()){
 				signalError.show("'"+superclassName+"' is 'final' and can not be extended");
 			}
 			if(superclassName.equals(className)){
@@ -160,23 +160,24 @@ public class Compiler {
 
 		while (lexer.token == Symbol.PRIVATE || lexer.token == Symbol.PUBLIC || lexer.token == Symbol.STATIC || lexer.token == Symbol.FINAL) {
 			Symbol qualifier;
-			still = false;
-			finale = false;
-
+			boolean memberIsStatic = false, memberIsFinal = false;
+			if (classIsFinal){
+				memberIsFinal = true;
+			}
 			while (lexer.token == Symbol.STATIC || lexer.token == Symbol.FINAL) {
 				switch (lexer.token){
 					case STATIC:
-						if (!still){
-							still = true;
+						if (!memberIsStatic){
+							memberIsStatic = true;
 						}else{
-							signalError.show("'static' has already been declared");
+							signalError.show("member is already static");
 						}
 						break;
 					case FINAL:
-						if (!finale){
-							finale = true;
+						if (!memberIsFinal){
+							memberIsFinal = true;
 						}else{
-							signalError.show("'final' has already been declared");
+							signalError.show("member is already final");
 						}
 						break;
 				}
@@ -202,19 +203,19 @@ public class Compiler {
 			lexer.nextToken();
 			if ( lexer.token == Symbol.LEFTPAR )
 				if(qualifier == Symbol.PRIVATE){
-					if(finale){
+					if(memberIsFinal){
 						signalError.show("final method must be public");
 					}
-					kraClass.addPrivateMethod(methodDec(t, name, still, finale));
+					kraClass.addPrivateMethod(methodDec(t, name, memberIsStatic, memberIsFinal));
 				}else{
-					kraClass.addPublicMethod(methodDec(t, name, still, finale));
+					kraClass.addPublicMethod(methodDec(t, name, memberIsStatic, memberIsFinal));
 				}
 			else if ( qualifier != Symbol.PRIVATE )
 				signalError.show("Attempt to declare a public instance variable");
 			else if (t.getName().equals("void"))
 				signalError.show("Attempt to declare a void instance variable");
 			else
-				kraClass.addInstanceVariableList(instanceVarDec(t, name, still, finale));
+				kraClass.addInstanceVariableList(instanceVarDec(t, name, memberIsStatic, memberIsFinal));
 		}
 		if ( lexer.token != Symbol.RIGHTCURBRACKET )
 			signalError.show("public/private or \"}\" expected");
@@ -225,48 +226,45 @@ public class Compiler {
 
 //	InstVarDec ::= Type IdList ";"
 // 	InstVarDec ::= [ "static" ] "private" Type IdList ";"
-	private InstanceVariableList instanceVarDec(Type type, String name, boolean still, boolean finale) {
+	private InstanceVariableList instanceVarDec(Type type, String name, boolean isStatic, boolean isFinal) {
 
 		if (symbolTable.getInInstance(name) != null){
-			signalError.show(name+" has already been declared");
+			signalError.show(name + " has already been declared");
 		}
-		symbolTable.putInInstance(name, new Variable(name, type));
-		ArrayList<InstanceVariable> instanceVariables = new ArrayList<>();
-		InstanceVariable instanceVariable = new InstanceVariable(type, name, still, finale);
-		instanceVariables.add(instanceVariable);
-		if (instanceVariable.isFinale()) {
+		symbolTable.putInInstance(name, new InstanceVariable(type, name, isStatic, isFinal));
+		InstanceVariableList instanceVariableList = new InstanceVariableList();
+		InstanceVariable instanceVariable = new InstanceVariable(type, name, isStatic, isFinal);
+		instanceVariableList.addElement(instanceVariable);
+		if (isFinal) {
 			if (lexer.token != Symbol.ASSIGN) {
 				signalError.show("Final variable must be initialized");
 			}
-// TODO: chamar o assignment quando a variavel for final
+			Expr expr = expr();
+			if (expr.getType() != instanceVariable.getType()){
+				signalError.show("Assignment must be of the same tipe as instance variable");
+			}
 		}
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show("Identifier expected");
 			String variableName = lexer.getStringValue();
-			instanceVariables.add(new InstanceVariable(type, variableName, still, finale));
+			instanceVariableList.addElement(new InstanceVariable(type, variableName, isStatic, isFinal));
 			lexer.nextToken();
 		}
 		if ( lexer.token != Symbol.SEMICOLON )
 			signalError.show(SignalError.semicolon_expected);
 		lexer.nextToken();
-		return new InstanceVariableList(instanceVariables);
+		return instanceVariableList;
 	}
 
-	private boolean searchMethods(String name, ParamList paramList, String clss, boolean superclass){
+	private KraClass searchMethods(String name, ParamList paramList, boolean isStatic, String clss){
 		KraClass kraClass = symbolTable.getInGlobal(clss);
-		if (kraClass.searchMethods(name, paramList, superclass)){
-			return true;
-		}
-		if(kraClass.getSuperclass() != null){
-			searchMethods(name, paramList, kraClass.getSuperClassName(), true );
-		}
-		return false;
+		return (kraClass.searchMethods(name, paramList.getTypeList(), isStatic, false));
 	}
 
 //	MethodDec ::= Qualifier Type Id "("[ FormalParamDec ] ")" "{" StatementList "}"
-	private Method methodDec(Type type, String name, boolean still, boolean finale) {
+	private Method methodDec(Type type, String name, boolean isStatic, boolean isFinal) {
 
 		lexer.nextToken();
 		ParamList paramList = new ParamList();
@@ -276,13 +274,14 @@ public class Compiler {
 		if ( lexer.token != Symbol.RIGHTPAR ){
 			signalError.show(") expected");
 		}
-		if (searchMethods(name, paramList, currentClass, false)){
-			signalError.show(name+" is already defined in "+ currentClass);
+		KraClass kraClass = searchMethods(name, paramList, isStatic, currentClass);
+		if ( kraClass != null){
+			signalError.show(name+" is already defined in "+ kraClass.getName());
 		}
 		lexer.nextToken();
 		if ( lexer.token != Symbol.LEFTCURBRACKET ) signalError.show("{ expected");
 		lexer.nextToken();
-		Method method = new Method(type,name,still,finale, paramList, null);
+		Method method = new Method(type,name,isStatic,isFinal, paramList);
 		currentMethod = method;
 		StatementList statementList = statementList();
 		method.setStatementList(statementList);
@@ -290,22 +289,6 @@ public class Compiler {
 		lexer.nextToken();
 		symbolTable.removeLocalIdent();
 		return method;
-	}
-
-	// LocalDec ::= Type IdList ";"
-	private void localDec() {
-
-		Type type = type();
-		if ( lexer.token != Symbol.IDENT ) signalError.show("Identifier expected");
-		Variable v = new Variable(lexer.getStringValue(), type);
-		lexer.nextToken();
-		while (lexer.token == Symbol.COMMA) {
-			lexer.nextToken();
-			if ( lexer.token != Symbol.IDENT )
-				signalError.show("Identifier expected");
-			v = new Variable(lexer.getStringValue(), type);
-			lexer.nextToken();
-		}
 	}
 
 //	recebimento de parametro, o parametro deve ser o filho da classe declarada
@@ -356,9 +339,9 @@ public class Compiler {
 			break;
 		case IDENT:
 			if (symbolTable.getInGlobal(lexer.getStringValue()) == null){
-				signalError.show("Is not a type");
+				signalError.show(lexer.getStringValue()+" is not a type");
 			}
-			result = new TypeClass(lexer.getStringValue());
+			result = symbolTable.getInGlobal(lexer.getStringValue());
 			break;
 		default:
 			signalError.show("Type expected");
@@ -394,7 +377,7 @@ public class Compiler {
 //  ReturnStat ``;'' | ReadStat ``;'' | WriteStat ``;'' |
 //  ``break''  ``;'' | ``;'' | CompStatement | LocalDec
 	private Statement statement() {
-		Statement statement = null;
+
 		switch (lexer.token) {
 		case THIS:
 		case IDENT:
@@ -402,39 +385,29 @@ public class Compiler {
 		case INT:
 		case BOOLEAN:
 		case STRING:
-			assignExprLocalDec();
-			break;
+			return assignExprLocalDec();
 		case RETURN:
-			statement = returnStatement();
-			break;
+			return returnStatement();
 		case READ:
-			readStatement();
-			break;
+			return readStatement();
 		case WRITE:
-			statement = writeStatement();
-			break;
+			return writeStatement();
 		case WRITELN:
-			statement = writelnStatement();
-			break;
+			return writelnStatement();
 		case IF:
-			statement = ifStatement();
-			break;
+			return ifStatement();
 		case BREAK:
-			statement = breakStatement();
-			break;
+			return breakStatement();
 		case WHILE:
-			statement = whileStatement();
-			break;
+			return whileStatement();
 		case SEMICOLON:
 			nullStatement();
-			break;
 		case LEFTCURBRACKET:
-			statement = compositeStatement();
-			break;
+			return compositeStatement();
 		default:
 			signalError.show("Statement expected");
 		}
-		return statement;
+		return null;
 	}
 
 
@@ -443,48 +416,59 @@ public class Compiler {
 		return this.symbolTable.getInGlobal(name) != null;
 	}
 
-	private Expr assignExprLocalDec() {
-//	 AssignExprLocalDec ::= Expression [ =" Expression ] | LocalDec
-		if ( lexer.token == Symbol.INT || lexer.token == Symbol.BOOLEAN
-				|| lexer.token == Symbol.STRING ||
-				// token é uma classe declarada textualmente antes desta
-				// instrução
-				(lexer.token == Symbol.IDENT && isType(lexer.getStringValue())) ) {
-			/*
-			 * uma declaração de variável. 'lexer.token' é o tipo da variável
-			 * 
-			 * AssignExprLocalDec ::= Expression [ "=" Expression ] | LocalDec
-			 * LocalDec ::= Type IdList ``;''
-			 */
-			localDec();
+
+//	LocalDec ::= Type IdList ";"
+	private DeclarationStatement localDec() {
+
+		Type type = type();
+		if ( lexer.token != Symbol.IDENT ) signalError.show("Identifier expected");
+		String name = lexer.getStringValue();
+		VariableList variableList = new VariableList();
+		Variable variable = new Variable(name, type);
+		if ( symbolTable.getInLocal(name) != null ) signalError.show("Variable already declared");
+		variableList.addElement(variable);
+		symbolTable.putInLocal(name,variable);
+		lexer.nextToken();
+		while (lexer.token == Symbol.COMMA) {
+			lexer.nextToken();
+			if ( lexer.token != Symbol.IDENT )
+				signalError.show("Identifier expected");
+			variable = new Variable(lexer.getStringValue(), type);
+			if ( symbolTable.getInLocal(name) != null ) signalError.show("Variable already declared");
+			variableList.addElement(variable);
+			symbolTable.putInLocal(name,variable);
+			lexer.nextToken();
+		}
+		return new DeclarationStatement(type, variableList);
+	}
+
+//  AssignExprLocalDec ::= Expression [ "=" Expression ] | LocalDec
+	private Statement assignExprLocalDec() {
+
+		if ( lexer.token == Symbol.INT || lexer.token == Symbol.BOOLEAN || lexer.token == Symbol.STRING ||
+		   ( lexer.token == Symbol.IDENT && isType(lexer.getStringValue())) ) {
+			 return localDec();
 		}
 		else {
-			/*
-			 * AssignExprLocalDec ::= Expression [ "=" Expression ]
-			 */
-			expr();
+			Expr exprLeft, exprRight = null;
+			exprLeft = expr();
 			if ( lexer.token == Symbol.ASSIGN ) {
 				lexer.nextToken();
-				expr();
-				if ( lexer.token != Symbol.SEMICOLON )
+				exprRight = expr();
+				if (!checkAssignment(exprLeft.getType(), exprRight.getType())) {
+					signalError.show("Types do not match");
+				}
+				if (lexer.token != Symbol.SEMICOLON)
 					signalError.show("';' expected", true);
 				else
 					lexer.nextToken();
 			}
+			return new AssignmentStatement(exprLeft, exprRight);
 		}
-		return null;
 	}
 
-//	real é o tipo que manda na chamada de parametros, ele deve ser a subclasse
-	private ExprList realParameters() {
-		ExprList anExprList = null;
-
-		if ( lexer.token != Symbol.LEFTPAR ) signalError.show("( expected");
-		lexer.nextToken();
-		if ( startExpr(lexer.token) ) anExprList = exprList();
-		if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
-		lexer.nextToken();
-		return anExprList;
+	private boolean checkAssignment(Type typeLeft, Type typeRight){
+		return (typeLeft == typeRight && typeLeft.getName().equals(typeRight.getName()));
 	}
 
 //	whileStatement ::= "while" "(" Expression ")" statement
@@ -688,7 +672,7 @@ public class Compiler {
 
 		Expr e;
 		ExprList exprList;
-		String messageName, ident;
+		String messageName, identifier;
 
 		switch (lexer.token) {
 
@@ -746,12 +730,8 @@ public class Compiler {
 			if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
 			lexer.nextToken();
 			return new ObjectExpr(kraClass);
-			/*
-          	 * PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"  | 
-          	 *                 Id  | Id "." Id | Id "." Id "(" [ ExpressionList ] ")" | Id "." Id "." Id "(" [ ExpressionList ] ")" |
-          	 *                 "this" | "this" "." Id | "this" "." Id "(" [ ExpressionList ] ")"  | "this" "." Id "." Id "(" [ ExpressionList ] ")"
-			 */
-//		PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"
+
+// 		PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"
 		case SUPER:
 			lexer.nextToken();
 			if ( lexer.token != Symbol.DOT ) {
@@ -762,118 +742,144 @@ public class Compiler {
 			if ( lexer.token != Symbol.IDENT )
 				signalError.show("Identifier expected");
 			messageName = lexer.getStringValue();
-// TODO: Procurar o message name na superclasse / superclasse / superclasse
-// TODO: Checa se não está em um método static
 			lexer.nextToken();
 			exprList = realParameters();
-//			return new SuperExpr(exprList, messageName);
-			break;
+			if (currentMethod.isStatic()){
+				signalError.show("super can not be called in a static method");
+			}
+			MessageSendToSuper messageSendToSuper = new MessageSendToSuper(exprList, messageName);
+			if (messageSendToSuper.validate(symbolTable.getInGlobal(currentClass))){
+				signalError.show("method was not declared");
+			}
+			return messageSendToSuper;
 
+// 		PrimaryExpr ::= Id  |
+// 		PrimaryExpr ::= Id "." Id |
+//		PrimaryExpr ::= Id "." Id "(" [ ExpressionList ] ")" |
+// 		PrimaryExpr ::= Id "." Id "." Id "(" [ ExpressionList ] ")"
 		case IDENT:
-			/*
-          	 * PrimaryExpr ::=  
-          	 *                 Id  |
-          	 *                 Id "." Id | 
-          	 *                 Id "." Id "(" [ ExpressionList ] ")" |
-          	 *                 Id "." Id "." Id "(" [ ExpressionList ] ")" |
-			 */
 
+			MessageSendToVariable messageSendToVariable = null;
 			String firstId = lexer.getStringValue();
 			lexer.nextToken();
+			Variable firstVariable = symbolTable.getInLocal(firstId);
 			if ( lexer.token != Symbol.DOT ) {
 				// Id
-				// retorne um objeto da ASA que representa um identificador
-				return null;
+				return new VariableExpr(firstVariable);
 			}
-			else { // Id "."
-				lexer.nextToken(); // coma o "."
+			else {
+				lexer.nextToken();
 				if ( lexer.token != Symbol.IDENT ) {
 					signalError.show("Identifier expected");
 				}
 				else {
-					// Id "." Id
+
+					identifier = lexer.getStringValue();
 					lexer.nextToken();
-					ident = lexer.getStringValue();
 					if ( lexer.token == Symbol.DOT ) {
-						// Id "." Id "." Id "(" [ ExpressionList ] ")"
-						/*
-						 * se o compilador permite variáveis estáticas, é possível
-						 * ter esta opção, como
-						 *     Clock.currentDay.setDay(12);
-						 * Contudo, se variáveis estáticas não estiver nas especificaçães,
-						 * sinalize um erro neste ponto.
-						 */
 						lexer.nextToken();
 						if ( lexer.token != Symbol.IDENT )
 							signalError.show("Identifier expected");
 						messageName = lexer.getStringValue();
 						lexer.nextToken();
 						exprList = this.realParameters();
+						// Id "." Id "." Id "(" [ ExpressionList ] ")"
+						messageSendToVariable =  new MessageSendToVariable(firstId, identifier, messageName,exprList);
+						if (symbolTable.getInGlobal(firstId) == null){
+							signalError.show(firstId+" was not declared");
+						}
+						if (!messageSendToVariable.validateInstance(symbolTable.getInGlobal(firstId))){
+							signalError.show(firstId+" does not have an static instance called "+ identifier);
+						}
+						if (!messageSendToVariable.validateIndentifierMessage()){
+							signalError.show(identifier+" does not have a method called "+ messageName);
+						}
 
 					}
 					else if ( lexer.token == Symbol.LEFTPAR ) {
-						// Id "." Id "(" [ ExpressionList ] ")"
+
 						exprList = this.realParameters();
-						/*
-						 * para fazer as conferências semânticas, procure por
-						 * método 'ident' na classe de 'firstId'
-						 */
+						// Id "." Id "(" [ ExpressionList ] ")"
+						messageSendToVariable =  new MessageSendToVariable(firstId, identifier, exprList);
+						if (symbolTable.getInGlobal(firstId) == null){
+							if (symbolTable.getInLocal(firstId) == null) {
+								signalError.show(firstId + " was not declared");
+							}
+							signalError.show(firstId + " was not declared");
+						}
+						if (!messageSendToVariable.validateMethodMessage(symbolTable.getInGlobal(firstId), symbolTable.getInGlobal(symbolTable.getInLocal(firstId).getName()))){
+							if (symbolTable.getInGlobal(firstId) == null){
+								if (symbolTable.getInLocal(firstId) == null) {
+									signalError.show(firstId + " does not have the method "+ identifier);
+								}
+								signalError.show(symbolTable.getInLocal(firstId).getType() + " does not have the method "+ identifier);
+							}
+						}
 					}
-					else {
-						// retorne o objeto da ASA que representa Id "." Id
+					else {// Id "." Id
+						messageSendToVariable =  new MessageSendToVariable(firstId, identifier);
+						if (symbolTable.getInGlobal(firstId) == null){
+							signalError.show(firstId+" was not declared");
+						}
+						if (!messageSendToVariable.validateInstance(symbolTable.getInGlobal(firstId))){
+							signalError.show(firstId+" does not have an static instance called "+ identifier);
+						}
 					}
 				}
 			}
-			break;
+			return messageSendToVariable;
+
+// 		PrimaryExpr ::= "this" |
+// 		PrimaryExpr ::= "this" "." Id |
+// 		PrimaryExpr ::= "this" "." Id "(" [ ExpressionList ] ")"  |
+// 		PrimaryExpr ::= "this" "." Id "." Id "(" [ ExpressionList ] ")"
 		case THIS:
-			/*
-			 * Este 'case THIS:' trata os seguintes casos: 
-          	 * PrimaryExpr ::= 
-          	 *                 "this" | 
-          	 *                 "this" "." Id | 
-          	 *                 "this" "." Id "(" [ ExpressionList ] ")"  | 
-          	 *                 "this" "." Id "." Id "(" [ ExpressionList ] ")"
-			 */
+
+			if (currentMethod.isStatic()){
+				signalError.show("This can not be called in a static method");
+			}
+			MessageSendToSelf messageSendToSelf;
 			lexer.nextToken();
 			if ( lexer.token != Symbol.DOT ) {
-				// only 'this'
-				// retorne um objeto da ASA que representa 'this'
-				// confira se n�o estamos em um método estático
-				return null;
+				return new ObjectExpr(symbolTable.getInGlobal(currentClass));
 			}
 			else {
 				lexer.nextToken();
 				if ( lexer.token != Symbol.IDENT )
 					signalError.show("Identifier expected");
-				ident = lexer.getStringValue();
+				identifier = lexer.getStringValue();
 				lexer.nextToken();
-				// j� analisou "this" "." Id
 				if ( lexer.token == Symbol.LEFTPAR ) {
-					// "this" "." Id "(" [ ExpressionList ] ")"
-					/*
-					 * Confira se a classe corrente possui um método cujo nome é
-					 * 'ident' e que pode tomar os parâmetros de ExpressionList
-					 */
 					exprList = this.realParameters();
+					messageSendToSelf = new MessageSendToSelf(symbolTable.getInGlobal(currentClass),identifier,exprList);
+					if (messageSendToSelf.validateClassMessage()){
+						signalError.show(currentClass+" does not have a method called "+identifier);
+					}
 				}
 				else if ( lexer.token == Symbol.DOT ) {
-					// "this" "." Id "." Id "(" [ ExpressionList ] ")"
 					lexer.nextToken();
 					if ( lexer.token != Symbol.IDENT )
 						signalError.show("Identifier expected");
+					messageName = lexer.getStringValue();
 					lexer.nextToken();
 					exprList = this.realParameters();
+					if (symbolTable.getInInstance(identifier) == null){
+						signalError.show("Instance Variable "+identifier+" not declared");
+					}
+					messageSendToSelf = new MessageSendToSelf(symbolTable.getInGlobal(currentClass),symbolTable.getInInstance(identifier), messageName, exprList, symbolTable.getInGlobal(symbolTable.getInInstance(identifier).getType().getName()));
+					if (!messageSendToSelf.validateInstanceMessage()){
+						signalError.show("Instance Variable "+identifier+" can not access method "+ messageName);
+					}
 				}
 				else {
-					// retorne o objeto da ASA que representa "this" "." Id
-					/*
-					 * confira se a classe corrente realmente possui uma
-					 * vari�vel de inst�ncia 'ident'
-					 */
-					return null;
+					if (symbolTable.getInInstance(identifier) == null){
+						signalError.show("Instance Variable "+identifier+" not declared");
+					}
+					messageSendToSelf = new MessageSendToSelf(symbolTable.getInGlobal(currentClass),symbolTable.getInInstance(identifier));
 				}
 			}
-			break;
+			return messageSendToSelf;
+
 		default:
 			signalError.show("Expression expected");
 		}
@@ -887,7 +893,6 @@ public class Compiler {
 		return new LiteralInt(value);
 	}
 
-//	é utilizado no parametro real
 	private static boolean startExpr(Symbol token) {
 
 		return token == Symbol.FALSE || token == Symbol.TRUE
@@ -897,6 +902,18 @@ public class Compiler {
 				|| token == Symbol.IDENT || token == Symbol.LITERALSTRING;
 
 	}
+
+	private ExprList realParameters() {
+
+		ExprList anExprList = null;
+		if ( lexer.token != Symbol.LEFTPAR ) signalError.show("( expected");
+		lexer.nextToken();
+		if ( startExpr(lexer.token) ) anExprList = exprList();
+		if ( lexer.token != Symbol.RIGHTPAR ) signalError.show(") expected");
+		lexer.nextToken();
+		return anExprList;
+	}
+
 
 	private Method			currentMethod;
 	private String			currentClass;
