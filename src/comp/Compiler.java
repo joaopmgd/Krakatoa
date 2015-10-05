@@ -427,7 +427,7 @@ public class Compiler {
 		Variable variable = new Variable(name, type);
 		if ( symbolTable.getInLocal(name) != null ) signalError.show("Variable already declared");
 		variableList.addElement(variable);
-		symbolTable.putInLocal(name,variable);
+		symbolTable.putInLocal(name, variable);
 		lexer.nextToken();
 		while (lexer.token == Symbol.COMMA) {
 			lexer.nextToken();
@@ -438,6 +438,9 @@ public class Compiler {
 			variableList.addElement(variable);
 			symbolTable.putInLocal(name,variable);
 			lexer.nextToken();
+		}
+		if (lexer.token != Symbol.SEMICOLON){
+			signalError.show("Invalid Character: " + lexer.token);
 		}
 		return new DeclarationStatement(type, variableList);
 	}
