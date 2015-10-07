@@ -90,7 +90,7 @@ public class Lexer {
                 tokenPos++;
              }
              if ( ch == '\0' ) {
-                 error.show("Comment opened and not closed", getLine(posStartComment), lineNumberStartComment);
+                 error.show("Comment started in line " + lineNumberStartComment + " was not closed", getLine(posStartComment), lineNumberStartComment);
              }else
                 tokenPos += 2;
              nextToken();

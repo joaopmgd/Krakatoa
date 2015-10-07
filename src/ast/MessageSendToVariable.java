@@ -10,17 +10,17 @@ public class MessageSendToVariable extends MessageSend {
     private KraClass kraClass;
     private Type instanceVariableType;
     private Type methodType;
-    private KraClass superClass;
+    private KraClass methodClass;
 
     // Clock.currentDay;
     public MessageSendToVariable (String firstId, String identifier){
         this.firstId = firstId;
         this.identifier = identifier;
         this.messageName = null;
-        this.exprList = null;
+        this.exprList = new ExprList();
         this.instanceVariableType = null;
         this.methodType = null;
-        this.superClass = null;
+        this.methodClass = null;
     }
 
     public boolean validateInstance (KraClass kraClass){
@@ -34,10 +34,14 @@ public class MessageSendToVariable extends MessageSend {
         this.firstId = firstId;
         this.identifier = null;
         this.messageName = messageName;
-        this.exprList = exprList;
+        if (exprList == null){
+            this.exprList = new ExprList();
+        }else{
+            this.exprList = exprList;
+        }
         this.instanceVariableType = null;
         this.methodType = null;
-        this.superClass = null;
+        this.methodClass = null;
     }
 
     // Clock.currentDay.setDay(12);
@@ -45,27 +49,43 @@ public class MessageSendToVariable extends MessageSend {
         this.firstId = firstId;
         this.identifier = identifier;
         this.messageName = messageName;
-        this.exprList = exprList;
+        if (exprList == null){
+            this.exprList = new ExprList();
+        }else{
+            this.exprList = exprList;
+        }
         this.instanceVariableType = null;
         this.methodType = null;
-        this.superClass = null;
+        this.methodClass = null;
     }
 
-    public boolean validateMethodMessage (KraClass kraClass, KraClass classFromVariable){
+//    ok
+    public boolean validateMethodMessage (KraClass kraClass, KraClass classFromVariable, Method currentMethod){
+
         if (kraClass != null){
             this.kraClass = kraClass;
-            if (this.kraClass.searchMethods(messageName, exprList.getTypeList(), true, false) != null) {
-                methodType = this.kraClass.getMethodType(messageName, exprList.getTypeList());
+            this.methodClass = this.kraClass.searchMethods(this.messageName, this.exprList.getTypeList(), true, true);
+            if ( methodClass != null) {
+                methodType = this.methodClass.getMethodType(this.messageName, this.exprList.getTypeList(),true);
                 return true;
-            }else{
+            }else {
+                if (this.kraClass.compareCurrentMethod(this.messageName, this.exprList.getTypeList(), false, currentMethod)) {
+                    methodType = currentMethod.getType();
+                    return true;
+                }
                 return false;
             }
         }else if (classFromVariable != null){
             this.kraClass = classFromVariable;
-            if (this.kraClass.searchMethods(messageName, exprList.getTypeList(), true, false) != null) {
-                methodType = this.kraClass.getMethodType(messageName, exprList.getTypeList());
+            this.methodClass = this.kraClass.searchMethods(this.messageName, this.exprList.getTypeList(), false, true);
+            if ( methodClass != null) {
+                methodType = this.methodClass.getMethodType(this.messageName, this.exprList.getTypeList(),true);
                 return true;
             }else{
+                if (this.kraClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)){
+                    methodType = currentMethod.getType();
+                    return true;
+                }
                 return false;
             }
         }
@@ -75,10 +95,10 @@ public class MessageSendToVariable extends MessageSend {
     public boolean validateIndentifierMessage (){
         KraClass superClass = kraClass.searchMethods(messageName, exprList.getTypeList(), false, false);
         if (superClass != kraClass && superClass != null){
-            this.superClass = kraClass;
-            methodType = superClass.getMethodType(messageName,exprList.getTypeList());
+            this.methodClass = kraClass;
+            methodType = superClass.getMethodType(messageName,exprList.getTypeList(),true);
         }else if (superClass != null){
-            methodType = kraClass.getMethodType(messageName,exprList.getTypeList());
+            methodType = kraClass.getMethodType(messageName,exprList.getTypeList(),true);
         }else{
             return false;
         }

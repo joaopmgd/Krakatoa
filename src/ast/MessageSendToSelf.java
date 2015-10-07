@@ -14,7 +14,7 @@ public class MessageSendToSelf extends MessageSend {
         this.instanceVariableClass = null;
         this.instanceVariable = instanceVariable;
         this.messageName = null;
-        this.exprList = null;
+        this.exprList = new ExprList();
     }
 
     public MessageSendToSelf(KraClass currentClass, String messageName, ExprList exprList){
@@ -22,7 +22,11 @@ public class MessageSendToSelf extends MessageSend {
         this.instanceVariableClass = null;
         this.instanceVariable = null;
         this.messageName = messageName;
-        this.exprList = exprList;
+        if (exprList == null){
+            this.exprList = new ExprList();
+        }else{
+            this.exprList = exprList;
+        }
     }
 
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable, String messageName, ExprList exprList, KraClass instanceVariableClass){
@@ -30,11 +34,15 @@ public class MessageSendToSelf extends MessageSend {
         this.instanceVariableClass = instanceVariableClass;
         this.instanceVariable = instanceVariable;
         this.messageName = messageName;
-        this.exprList = exprList;
+        if (exprList == null){
+            this.exprList = new ExprList();
+        }else{
+            this.exprList = exprList;
+        }
     }
 
     public boolean validateInstanceMessage() {
-        return (this.instanceVariableClass.searchMethods(messageName,exprList.getTypeList(),false,false) != null);
+        return (this.instanceVariableClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,true) != null);
     }
 
     public boolean validateClassMessage(){

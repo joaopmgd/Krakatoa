@@ -25,16 +25,31 @@ public class TypeList implements Comparable<TypeList> {
         return typeList.size();
     }
 
+    public Type getPosition(int i){
+        return this.typeList.get(i);
+    }
+
     public ArrayList<Type> getTypeList() {
         return typeList;
     }
 
     @Override
-    public int compareTo(TypeList typeList) {
-        if (this == typeList){
-            return 0;
-        }else{
+    public int compareTo(TypeList typeListParameter) {
+        if (this.getSize() != typeListParameter.getSize()){
             return 1;
+        }else{
+            if (typeListParameter.getSize() == 0){
+                return 0;
+            }else{
+                int i = 0;
+                for (Type type: typeList){
+                    if (!(type.getName().equals(typeListParameter.getPosition(i).getName()))){
+                        return 1;
+                    }
+                    i++;
+                }
+                return 0;
+            }
         }
     }
 }

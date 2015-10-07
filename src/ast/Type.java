@@ -12,8 +12,6 @@ abstract public class Type {
     public static Type voidType = new TypeVoid();
     public static Type undefinedType = new TypeUndefined();
 
-
-
     public String getName() {
         return name;
     }

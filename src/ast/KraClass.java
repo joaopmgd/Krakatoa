@@ -1,10 +1,12 @@
 package ast;
+
+import java.util.Currency;
+
 /*
  * Krakatoa Class
  */
 public class KraClass extends Type {
 
-   private String name;
    private KraClass superClass;
    private boolean isStatic;
    private boolean isFinal;
@@ -30,15 +32,23 @@ public class KraClass extends Type {
       return isFinal;
    }
 
-   public Type getMethodType(String methodName, TypeList typeList){
-      Method method = privateMethodList.search(methodName,typeList, isStatic);
+   public Type getMethodType(String methodName, TypeList typeList, boolean superclass){
+      Method method = null;
+      if (!superclass) {
+         method = privateMethodList.search(methodName, typeList, isStatic);
+      }
       if (method == null){
          method = publicMethodList.search(methodName, typeList, isStatic);
       }
       return method.getType();
    }
 
+   public Method getMethod(String name, TypeList typelist){
+      return publicMethodList.search(name, typelist, false);
+   }
+
    public KraClass searchMethods(String name, TypeList typeList, boolean isStatic, boolean superclass){
+
       if(!superclass){
          if (privateMethodList.search(name,typeList, isStatic) != null){
             return this;
@@ -53,17 +63,25 @@ public class KraClass extends Type {
       return null;
    }
 
+   public boolean compareCurrentMethod(String name, TypeList typeList, boolean isStatic,Method currentMethod){
+
+      if (currentMethod.getName().equals(name)){
+         if (isStatic && currentMethod.isStatic()){
+            return true;
+         }else if (typeList.compareTo(currentMethod.getParamList().getTypeList()) == 0) {
+            return true;
+         }
+      }
+      return false;
+   }
+
    public String getCname() {
       return getName();
    }
 
    @Override
    public String getName() {
-      return name;
-   }
-
-   public void setName(String name) {
-      this.name = name;
+      return super.getName();
    }
 
    public String getSuperClassName(){
