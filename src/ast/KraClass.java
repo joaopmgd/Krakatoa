@@ -75,6 +75,27 @@ public class KraClass extends Type {
       return false;
    }
 
+   public boolean searchSuperClassName (String name){
+      if (superClass != null && superClass.getName().equals(name)){
+         return true;
+      }else if (superClass != null){
+         return superClass.searchSuperClassName(name);
+      }else{
+         return false;
+      }
+   }
+
+   public boolean searchSuperClass (KraClass suposedSuperClass){
+      if (this.superClass != null){
+         if (superClass.getName().equals(suposedSuperClass.getName())){
+            return true;
+         }else{
+            return searchSuperClass(this.superClass);
+         }
+      }
+      return false;
+   }
+
    public String getCname() {
       return getName();
    }

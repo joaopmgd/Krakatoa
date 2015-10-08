@@ -10,12 +10,8 @@ public class NullExpr extends Expr {
       return type;
    }
 
-   public void setType(Type type){
-      this.type = type;
-   }
-
    public NullExpr (){
-      this.type = null;
+      this.type = Type.nullType;
    }
 
    private Type type;

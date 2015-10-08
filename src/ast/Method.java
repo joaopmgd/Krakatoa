@@ -1,7 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
-
 /**
  * Created by joao on 29/09/15.
  */
@@ -38,8 +36,24 @@ public class Method {
         if (statement instanceof ReturnStatement && ((ReturnStatement) statement).getReturnType().getName().equals(this.type.getName())){
             hasReturn = true;
             return true;
-        }else
+        }else if (statement instanceof ReturnStatement && ((ReturnStatement) statement).getReturnType() instanceof KraClass){
+            KraClass kraClass = ((KraClass)((ReturnStatement) statement).getReturnType()).getSuperclass();
+            return (verifySuperClassType(kraClass,this.type.getName()));
+        }
         return false;
+    }
+
+    public boolean verifySuperClassType(KraClass kraClass, String name){
+        if (kraClass == null){
+            return false;
+        }
+        else if (kraClass.getName().equals(name)){
+            return true;
+        }else if (kraClass.getSuperclass() != null){
+            return verifySuperClassType(kraClass.getSuperclass(),name);
+        }else{
+            return false;
+        }
     }
 
     public boolean hasReturn() {

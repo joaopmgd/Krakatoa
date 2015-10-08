@@ -44,7 +44,11 @@ public class TypeList implements Comparable<TypeList> {
                 int i = 0;
                 for (Type type: typeList){
                     if (!(type.getName().equals(typeListParameter.getPosition(i).getName()))){
-                        return 1;
+                        if (type instanceof KraClass && (!((KraClass) type).searchSuperClassName(typeListParameter.getPosition(i).getName()))){
+                            return 1;
+                        } else if (!(type instanceof KraClass)){
+                            return 1;
+                        }
                     }
                     i++;
                 }

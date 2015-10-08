@@ -5,10 +5,10 @@ package ast;
  */
 public class ReadStatement extends Statement {
 
-    private VariableList variableList;
+    private ExprList exprList;
 
-    public ReadStatement (VariableList variableList){
-        this.variableList = variableList;
+    public ReadStatement (ExprList exprList){
+        this.exprList = exprList;
     }
 
     public void genKra(PW pw){

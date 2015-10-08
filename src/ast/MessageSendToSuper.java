@@ -14,7 +14,8 @@ public class MessageSendToSuper extends MessageSend {
 
     public boolean validate(KraClass kraClass){
         KraClass superClass = kraClass.getSuperclass();
-        this.classOfMethod = superClass.searchMethods(name, exprList.getTypeList(), false ,true);
+        if (superClass != null)
+            this.classOfMethod = superClass.searchMethods(name, exprList.getTypeList(), false ,true);
         if (this.classOfMethod != null){
             return true;
         }

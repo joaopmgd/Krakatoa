@@ -13,7 +13,9 @@ public class MethodList {
                 if (isStatic && method.isStatic()){
                     return method;
                 } else if (typeList.compareTo(method.getParamList().getTypeList()) == 0) {
-                    return method;
+                    if (method.isStatic() == isStatic){
+                        return method;
+                    }
                 }
             }
         }

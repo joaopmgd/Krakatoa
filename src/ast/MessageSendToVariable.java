@@ -26,7 +26,7 @@ public class MessageSendToVariable extends MessageSend {
     public boolean validateInstance (KraClass kraClass){
         this.kraClass = kraClass;
         this.instanceVariableType =  this.kraClass.getInstanceVariableList().searchStaticInstance(this.identifier);
-        return (instanceVariableType == null);
+        return (instanceVariableType != null);
     }
 
     // object.setDay(12);
@@ -62,20 +62,7 @@ public class MessageSendToVariable extends MessageSend {
 //    ok
     public boolean validateMethodMessage (KraClass kraClass, KraClass classFromVariable, Method currentMethod){
 
-        if (kraClass != null){
-            this.kraClass = kraClass;
-            this.methodClass = this.kraClass.searchMethods(this.messageName, this.exprList.getTypeList(), true, true);
-            if ( methodClass != null) {
-                methodType = this.methodClass.getMethodType(this.messageName, this.exprList.getTypeList(),true);
-                return true;
-            }else {
-                if (this.kraClass.compareCurrentMethod(this.messageName, this.exprList.getTypeList(), false, currentMethod)) {
-                    methodType = currentMethod.getType();
-                    return true;
-                }
-                return false;
-            }
-        }else if (classFromVariable != null){
+        if (classFromVariable != null){
             this.kraClass = classFromVariable;
             this.methodClass = this.kraClass.searchMethods(this.messageName, this.exprList.getTypeList(), false, true);
             if ( methodClass != null) {
@@ -83,6 +70,19 @@ public class MessageSendToVariable extends MessageSend {
                 return true;
             }else{
                 if (this.kraClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)){
+                    methodType = currentMethod.getType();
+                    return true;
+                }
+                return false;
+            }
+        }else if (kraClass != null) {
+            this.kraClass = kraClass;
+            this.methodClass = this.kraClass.searchMethods(this.messageName, this.exprList.getTypeList(), true, true);
+            if (methodClass != null) {
+                methodType = this.methodClass.getMethodType(this.messageName, this.exprList.getTypeList(), true);
+                return true;
+            } else {
+                if (this.kraClass.compareCurrentMethod(this.messageName, this.exprList.getTypeList(), false, currentMethod)) {
                     methodType = currentMethod.getType();
                     return true;
                 }

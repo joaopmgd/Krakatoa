@@ -58,6 +58,23 @@ public class Lexer {
 
 
 
+    public Symbol viewNextToken(){
+        int lastTokenPos = this.lastTokenPos, beforeLastTokenPos = this.beforeLastTokenPos, tokenPos = this.tokenPos;
+        String stringValue = this.stringValue, literalStringValue = this.literalStringValue;
+        int numberValue = this.numberValue, lineNumber = this.lineNumber;
+        Symbol token = this.token, returnToken;
+        nextToken();
+        returnToken = this.token;
+        this.lastTokenPos = lastTokenPos;
+        this.beforeLastTokenPos = beforeLastTokenPos;
+        this.tokenPos = tokenPos;
+        this.token = token;
+        this.stringValue = stringValue;
+        this.literalStringValue = literalStringValue;
+        this.numberValue = numberValue;
+        this.lineNumber = lineNumber;
+        return returnToken;
+    }
 
     public void nextToken() {
         char ch;

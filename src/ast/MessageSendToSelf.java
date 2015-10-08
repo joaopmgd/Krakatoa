@@ -45,8 +45,9 @@ public class MessageSendToSelf extends MessageSend {
         return (this.instanceVariableClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,true) != null);
     }
 
-    public boolean validateClassMessage(){
-        return(this.currentClass.searchMethods(messageName,exprList.getTypeList(),false,false) != null);
+    public boolean validateClassMessage(Method currentMethod){
+        return (this.currentClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,false) != null
+        || (this.currentClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)));
     }
 
     public Type getType() { 
