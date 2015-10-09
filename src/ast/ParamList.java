@@ -6,6 +6,19 @@ public class ParamList {
 
     private ArrayList<Variable> paramList;
 
+    public String getParamListNames() {
+        String names = "";
+        int i = paramList.size()-1;
+        for (Variable variable: this.paramList){
+            names = names + variable.getType().getName();
+            if (i > 0){
+                names = names + ", ";
+                i--;
+            }
+        }
+        return names;
+    }
+
     public ParamList() {
        paramList = new ArrayList<Variable>();
     }

@@ -199,7 +199,8 @@ public class Comp {
 			try {
 				numChRead = stream.read( input, 0, (int ) file.length() );
 				if ( numChRead != file.length()) {
-					System.out.println(numChRead -  file.length());
+					System.out.print(numChRead -  file.length());
+					System.out.println(" : "+filename);
 					outError.println("Read error");
 					stream.close();
 					return ;

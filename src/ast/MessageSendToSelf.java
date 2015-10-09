@@ -8,6 +8,23 @@ public class MessageSendToSelf extends MessageSend {
     private KraClass currentClass;
     private String messageName;
     private ExprList exprList;
+    private Method method;
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public String getMessageName() {
+        return messageName;
+    }
+
+    public InstanceVariable getInstanceVariable() {
+        return instanceVariable;
+    }
+
+    public String getExprListNames() {
+        return exprList.getTypeNames();
+    }
 
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable){
         this.currentClass = currentClass;
@@ -15,6 +32,7 @@ public class MessageSendToSelf extends MessageSend {
         this.instanceVariable = instanceVariable;
         this.messageName = null;
         this.exprList = new ExprList();
+        this.method = null;
     }
 
     public MessageSendToSelf(KraClass currentClass, String messageName, ExprList exprList){
@@ -27,6 +45,7 @@ public class MessageSendToSelf extends MessageSend {
         }else{
             this.exprList = exprList;
         }
+        this.method = null;
     }
 
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable, String messageName, ExprList exprList, KraClass instanceVariableClass){
@@ -39,19 +58,37 @@ public class MessageSendToSelf extends MessageSend {
         }else{
             this.exprList = exprList;
         }
+        this.method = null;
     }
 
     public boolean validateInstanceMessage() {
-        return (this.instanceVariableClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,true) != null);
+        KraClass methodClass = this.instanceVariableClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,true);
+        if (methodClass != null){
+            this.method = methodClass.getMethod(this.messageName,exprList.getTypeList());
+            return true;
+        }
+        return false;
     }
 
     public boolean validateClassMessage(Method currentMethod){
-        return (this.currentClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,false) != null
-        || (this.currentClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)));
+        KraClass methodClass = this.currentClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,false);
+        if (methodClass != null){
+            this.method = methodClass.getMethodFromThis(this.messageName,exprList.getTypeList());
+            return true;
+        }else{
+            if (this.currentClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)){
+                this.method = currentMethod;
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Type getType() { 
-        return this.instanceVariable.getType();
+    public Type getType() {
+        if (this.method != null )
+            return this.method.getType();
+        else
+            return this.instanceVariable.getType();
     }
 
     private void genKra(PW pw){

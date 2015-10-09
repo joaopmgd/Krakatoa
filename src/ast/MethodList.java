@@ -7,6 +7,15 @@ import java.util.ArrayList;
  */
 public class MethodList {
 
+    public Method searchNameMethod(String run){
+        for(Method method : methodList){
+            if (method.getName().equals(run)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
     public Method search(String name, TypeList typeList, boolean isStatic){
         for(Method method : methodList){
             if (method.getName().equals(name)) {
@@ -15,6 +24,34 @@ public class MethodList {
                 } else if (typeList.compareTo(method.getParamList().getTypeList()) == 0) {
                     if (method.isStatic() == isStatic){
                         return method;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Method searchDeclaration(Type type, String name, TypeList typeList, boolean isStatic, boolean superClass){
+        for(Method method : methodList){
+            if (method.getName().equals(name)) {
+                if (superClass){
+                    if(typeList.compareTo(method.getParamList().getTypeList()) != 0){
+                        return method;
+                    }
+                    if (method.getType() != type){
+                        return method;
+                    }
+                    if (method.isFinal()){
+                        return method;
+                    }
+                }
+                if (isStatic && method.isStatic()){
+                    return method;
+                } else if (typeList.compareTo(method.getParamList().getTypeList()) == 0) {
+                    if (method.isStatic() == isStatic && !superClass){
+                        return method;
+                    }else if (method.isStatic() == isStatic ){
+                        return null;
                     }
                 }
             }

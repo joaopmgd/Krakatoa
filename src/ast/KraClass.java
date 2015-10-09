@@ -24,6 +24,17 @@ public class KraClass extends Type {
       this.privateMethodList = new PrivateMethodList();
    }
 
+   public int validateProgram(){
+      if (!this.getName().equals("Program")){
+         return 1;
+      }
+      Method run = this.getNameMethod("run");
+      if (run == null) {
+         return 2;
+      }
+      return 0;
+   }
+
    public boolean isStatic() {
       return isStatic;
    }
@@ -43,8 +54,28 @@ public class KraClass extends Type {
       return method.getType();
    }
 
+   public Method getMethodDeclaration(Type type, String name, TypeList typelist){
+      return publicMethodList.searchDeclaration(type, name, typelist, false, true);
+   }
+
    public Method getMethod(String name, TypeList typelist){
       return publicMethodList.search(name, typelist, false);
+   }
+
+   public Method getNameMethod (String run){
+      Method method = (privateMethodList.searchNameMethod(run));
+      if (method == null){
+         method = publicMethodList.searchNameMethod(run);
+      }
+      return method;
+   }
+
+   public Method getMethodFromThis(String name, TypeList typelist){
+      Method method = (privateMethodList.search(name, typelist, false));
+      if (method == null){
+         method = publicMethodList.search(name, typelist, false);
+      }
+      return method;
    }
 
    public KraClass searchMethods(String name, TypeList typeList, boolean isStatic, boolean superclass){
@@ -59,6 +90,21 @@ public class KraClass extends Type {
       }
       if (this.superClass != null && !isStatic){
          return this.superClass.searchMethods(name, typeList, isStatic, true);
+      }
+      return null;
+   }
+
+   public KraClass searchDeclarationMethods(Type type, String name, TypeList typeList, boolean isStatic, boolean superclass){
+      if(!superclass){
+         if (privateMethodList.searchDeclaration(type, name, typeList, isStatic, superclass) != null){
+            return this;
+         }
+      }
+      if (publicMethodList.searchDeclaration(type, name, typeList, isStatic, superclass) != null){
+         return this;
+      }
+      if (this.superClass != null && !isStatic){
+         return this.superClass.searchDeclarationMethods(type, name, typeList, isStatic, true);
       }
       return null;
    }

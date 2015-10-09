@@ -12,6 +12,22 @@ public class MessageSendToVariable extends MessageSend {
     private Type methodType;
     private KraClass methodClass;
 
+    public String getFirstId() {
+        return firstId;
+    }
+
+    public String getMessageName() {
+        return messageName;
+    }
+
+    public String getExprListNames() {
+        return exprList.getTypeNames();
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
     // Clock.currentDay;
     public MessageSendToVariable (String firstId, String identifier){
         this.firstId = firstId;

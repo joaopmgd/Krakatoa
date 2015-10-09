@@ -6,8 +6,16 @@ public class MessageSendToSuper extends MessageSend {
     private String name;
     private KraClass classOfMethod;
 
+    public String getExprListNames() {
+        return exprList.getTypeNames();
+    }
+
     public MessageSendToSuper (ExprList exprList, String name){
-        this.exprList = exprList;
+        if (exprList == null){
+            this.exprList = new ExprList();
+        }else{
+            this.exprList = exprList;
+        }
         this.name = name;
         this.classOfMethod = null;
     }
