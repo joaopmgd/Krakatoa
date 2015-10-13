@@ -15,8 +15,11 @@ public class DeclarationStatement extends Statement {
         this.type = type;
     }
 
-    public void genKra(){
-
+    public void genKra(PW pw){
+        pw.printIdent(this.type.getName());
+        pw.print(" ");
+        this.variableList.genKra(pw);
+        pw.println(";");
     }
 
     @Override

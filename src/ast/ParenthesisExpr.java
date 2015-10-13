@@ -15,6 +15,13 @@ public class ParenthesisExpr extends Expr {
     public Type getType() {
         return expr.getType();
     }
+
+    @Override
+    public void genKra(PW pw, boolean putParenthesis) {
+        pw.print("(");
+        expr.genKra(pw, false);
+        pw.printIdent(")");
+    }
     
     private Expr expr;
 }

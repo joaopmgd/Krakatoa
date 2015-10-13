@@ -43,7 +43,7 @@ public class KraClass extends Type {
       return isFinal;
    }
 
-   public Type getMethodType(String methodName, TypeList typeList, boolean superclass){
+   public Type getMethodType(String methodName, TypeList typeList, boolean isStatic,boolean superclass){
       Method method = null;
       if (!superclass) {
          method = privateMethodList.search(methodName, typeList, isStatic);
@@ -81,7 +81,7 @@ public class KraClass extends Type {
    public KraClass searchMethods(String name, TypeList typeList, boolean isStatic, boolean superclass){
 
       if(!superclass){
-         if (privateMethodList.search(name,typeList, isStatic) != null){
+         if (privateMethodList.search(name, typeList, isStatic) != null){
             return this;
          }
       }
@@ -167,36 +167,41 @@ public class KraClass extends Type {
       return instanceVariableList;
    }
 
-   public void setInstanceVariableList(InstanceVariableList instanceVariableList) {
-      this.instanceVariableList = instanceVariableList;
-   }
-
    public void addInstanceVariableList(InstanceVariableList instanceVariableList){
       this.instanceVariableList.addInstanceVariableList(instanceVariableList);
    }
 
-   public PublicMethodList getPublicMethodList() {
-      return publicMethodList;
-   }
-
-   public void setPublicMethodList(PublicMethodList publicMethodList) {
-      this.publicMethodList = publicMethodList;
-   }
 
    public void addPublicMethod(Method method){
       this.publicMethodList.addElement(method);
    }
 
-   public PrivateMethodList getPrivateMethodList() {
-      return privateMethodList;
-   }
-
-   public void setPrivateMethodList(PrivateMethodList privateMethodList) {
-      this.privateMethodList = privateMethodList;
-   }
-
    public void addPrivateMethod(Method method){
       this.privateMethodList.addElement(method);
+   }
+
+   public void genKra(PW pw){
+      if(this.isFinal)
+         pw.print("final ");
+      if(this.isStatic)
+         pw.print("static ");
+
+      pw.print("class ");
+      pw.print(this.getName());
+
+      if(this.superClass != null)
+         pw.print(" extends " + this.superClass.getName());
+
+      pw.println(" {");
+      pw.println("");
+      pw.add();
+      this.instanceVariableList.genKra(pw);
+      this.privateMethodList.genKra(pw);
+      this.publicMethodList.genKra(pw);
+      pw.sub();
+      pw.println("");
+      pw.println("}");
+      pw.println("");
    }
 
 

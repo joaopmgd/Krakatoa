@@ -17,20 +17,12 @@ public class TypeList implements Comparable<TypeList> {
         typeList.add(type);
     }
 
-    public void addTypeList(TypeList typeList) {
-        this.typeList.addAll(typeList.getTypeList());
-    }
-
     public int getSize() {
         return typeList.size();
     }
 
     public Type getPosition(int i){
         return this.typeList.get(i);
-    }
-
-    public ArrayList<Type> getTypeList() {
-        return typeList;
     }
 
     @Override
@@ -43,8 +35,10 @@ public class TypeList implements Comparable<TypeList> {
             }else{
                 int i = 0;
                 for (Type type: typeList){
-                    if (!(type.getName().equals(typeListParameter.getPosition(i).getName()))){
-                        if (type instanceof KraClass && (!((KraClass) type).searchSuperClassName(typeListParameter.getPosition(i).getName()))){
+                    if ((!(type.getName().equals(typeListParameter.getPosition(i).getName())))){
+                        if  ((type == Type.nullType) && (typeListParameter.getPosition(i) instanceof KraClass)){
+                            return 0;
+                        }else if (type instanceof KraClass && (!((KraClass) type).searchSuperClassName(typeListParameter.getPosition(i).getName()))){
                             return 1;
                         } else if (!(type instanceof KraClass)){
                             return 1;

@@ -14,5 +14,10 @@ public class NullExpr extends Expr {
       this.type = Type.nullType;
    }
 
+   @Override
+   public void genKra(PW pw, boolean putParenthesis) {
+      pw.print("null");
+   }
+
    private Type type;
 }

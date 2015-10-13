@@ -13,8 +13,9 @@ public class Method {
     private LocalVariableList localVariableList;
     private StatementList statementList;
     private boolean hasReturn;
+    private boolean classIsFinal;
 
-    public Method(Type type, String name, boolean isStatic, boolean isFinal, ParamList paramList){
+    public Method(Type type, String name, boolean isStatic, boolean isFinal, ParamList paramList, boolean classIsFinal){
         this.type = type;
         this.name = name;
         this.isStatic = isStatic;
@@ -22,6 +23,7 @@ public class Method {
         this.paramList = paramList;
         this.statementList = null;
         this.hasReturn = false;
+        this.classIsFinal = classIsFinal;
     }
 
     public boolean isFinal() {
@@ -74,5 +76,36 @@ public class Method {
 
     public void setStatementList(StatementList statementList) {
         this.statementList = statementList;
+    }
+
+    public void genKra(PW pw, String scope) {
+
+		pw.printIdent("");
+        if(this.isFinal && !this.classIsFinal)
+            pw.print("final ");
+        if(this.isStatic)
+            pw.print("static ");
+
+        pw.print(scope);
+        pw.print(" ");
+        pw.print(this.type.getName());
+        pw.print(" ");
+        pw.print(this.name);
+        pw.print("(");
+
+        if(this.paramList != null)
+            this.paramList.genKra(pw);
+
+        pw.println(") {");
+        pw.add();
+
+        if(this.localVariableList != null)
+            this.localVariableList.genKra(pw);
+
+        if(this.statementList != null)
+            this.statementList.genKra(pw);
+        pw.sub();
+        pw.printlnIdent("}");
+
     }
 }

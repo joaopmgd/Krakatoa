@@ -11,8 +11,11 @@ public class ReadStatement extends Statement {
         this.exprList = exprList;
     }
 
+    @Override
     public void genKra(PW pw){
-
+        pw.printIdent("read( ");
+        this.exprList.genKra(pw);
+        pw.println(" );");
     }
 
     @Override

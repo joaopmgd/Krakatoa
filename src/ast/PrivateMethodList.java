@@ -8,4 +8,8 @@ public class PrivateMethodList extends MethodList {
     public PrivateMethodList(){
         super();
     }
+
+    public void genKra(PW pw) {
+        super.genKra(pw, "public");
+    }
 }

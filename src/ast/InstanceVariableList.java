@@ -19,10 +19,6 @@ public class InstanceVariableList {
        instanceVariableList = new ArrayList<InstanceVariable>();
     }
 
-    public InstanceVariableList(ArrayList<InstanceVariable> instanceVariableList) {
-        this.instanceVariableList = instanceVariableList;
-    }
-
     public void addElement(InstanceVariable instanceVariable) {
        instanceVariableList.add(instanceVariable);
     }
@@ -31,15 +27,18 @@ public class InstanceVariableList {
         this.instanceVariableList.addAll(instanceVariableList.getInstanceVariableList());
     }
 
-    public Iterator<InstanceVariable> elements() {
-    	return this.instanceVariableList.iterator();
-    }
-
     public int getSize() {
         return instanceVariableList.size();
     }
 
     public ArrayList<InstanceVariable> getInstanceVariableList() {
         return instanceVariableList;
+    }
+
+    public void genKra(PW pw) {
+        for (InstanceVariable instanceVariable: instanceVariableList)
+            instanceVariable.genKra(pw);
+        if(!this.instanceVariableList.isEmpty())
+            pw.println("");
     }
 }

@@ -13,6 +13,14 @@ public class LiteralString extends Expr {
     public Type getType() {
         return Type.stringType;
     }
+
+    @Override
+    public void genKra(PW pw, boolean putParenthesis) {
+        if(this.literalString.equals(""))
+            pw.print("\"\"");
+        else
+            pw.print("\""+  this.literalString +"\"");
+    }
     
     private String literalString;
 }

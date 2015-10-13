@@ -13,7 +13,24 @@ public class WhileStatement extends Statement {
         this.statement = statement;
     }
 
+    @Override
     public void genKra (PW pw){
+        pw.printIdent("while( ");
+        this.expr.genKra(pw, false);
+
+        if(this.statement instanceof CompositeStatement){
+            pw.print(" ) ");
+            this.statement.genKra(pw);
+        }
+        else{
+            pw.println(" )");
+            pw.add();
+            if(this.statement != null)
+                this.statement.genKra(pw);
+            else
+                pw.printlnIdent(";");
+            pw.sub();
+        }
 
     }
 

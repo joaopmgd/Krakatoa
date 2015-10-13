@@ -91,8 +91,24 @@ public class MessageSendToSelf extends MessageSend {
             return this.instanceVariable.getType();
     }
 
-    private void genKra(PW pw){
+    @Override
+    public void genKra(PW pw, boolean putParenthesis) {
+        if(putParenthesis)
+            pw.print("(");
 
+        pw.print("this");
+        if(this.instanceVariable != null)
+            pw.print("." + this.instanceVariable.getName());
+
+        if(this.messageName != null){
+            pw.print("."+this.messageName);
+            pw.print("(");
+            this.exprList.genKra(pw);
+            pw.print(")");
+        }
+
+        if(putParenthesis)
+            pw.print(")");
     }
     
     public void genC( PW pw, boolean putParenthesis ) {

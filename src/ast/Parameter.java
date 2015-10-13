@@ -7,4 +7,8 @@ public class Parameter extends Variable {
         super(name, type);
     }
 
+    public void genKra(PW pw){
+        pw.print(this.getName());
+    }
+
 }

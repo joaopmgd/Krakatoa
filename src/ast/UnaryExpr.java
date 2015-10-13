@@ -30,6 +30,25 @@ public class UnaryExpr extends Expr {
 	}
 
 	@Override
+	public void genKra(PW pw, boolean putParenthesis) {
+		switch (op) {
+			case PLUS:
+				pw.print("+");
+				break;
+			case MINUS:
+				pw.print("-");
+				break;
+			case NOT:
+				pw.print("!");
+				break;
+			default:
+				pw.print(" internal error at UnaryExpr::genKra");
+
+		}
+		expr.genKra(pw, false);
+	}
+
+	@Override
 	public Type getType() {
 		return expr.getType();
 	}

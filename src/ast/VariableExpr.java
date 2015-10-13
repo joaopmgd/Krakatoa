@@ -13,6 +13,10 @@ public class VariableExpr extends Expr {
     public Type getType() {
         return v.getType();
     }
+
+    public void genKra( PW pw, boolean putParenthesis ) {
+        pw.print( v.getName() );
+    }
     
     private Variable v;
 }

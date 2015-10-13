@@ -53,11 +53,12 @@ public class Compiler {
 				}
 			}
 		} catch (RuntimeException e) {
-			for(CompilationError compilationError: compilationErrorList){
+//			System.out.println("error");
+//			for(CompilationError compilationError: compilationErrorList){
 //				System.out.print("\nMensagem Correta : " + metaobjectCallList.get(0).getParamList().get(2) + " ");
 //				System.out.println(metaobjectCallList.get(0).getParamList().get(3));
 //				System.out.println("\nMensagem Compiler: " + compilationError.getMessage() + "\n\nLinha do Código: " + compilationError.getLineWithError() + "\n\nNúmero da Linha: " + compilationError.getLineNumber() + "\n");
-			}
+//			}
 		}
 		return new Program(kraClassList, metaobjectCallList, compilationErrorList);
 	}
@@ -219,9 +220,9 @@ public class Compiler {
 					if(memberIsFinal){
 						signalError.show("final method must be public");
 					}
-					kraClass.addPrivateMethod(methodDec(qualifier, t, name, memberIsStatic, memberIsFinal));
+					kraClass.addPrivateMethod(methodDec(qualifier, t, name, memberIsStatic, memberIsFinal, classIsFinal));
 				}else{
-					kraClass.addPublicMethod(methodDec(qualifier, t, name, memberIsStatic, memberIsFinal));
+					kraClass.addPublicMethod(methodDec(qualifier, t, name, memberIsStatic, memberIsFinal, classIsFinal));
 				}
 			else if ( qualifier != Symbol.PRIVATE )
 				signalError.show("Attempt to declare public instance variable");
@@ -277,7 +278,7 @@ public class Compiler {
 	}
 
 //	MethodDec ::= Qualifier Type Id "("[ FormalParamDec ] ")" "{" StatementList "}"
-	private Method methodDec(Symbol qualifier,Type type, String name, boolean isStatic, boolean isFinal) {
+	private Method methodDec(Symbol qualifier,Type type, String name, boolean isStatic, boolean isFinal, boolean classIsFinal) {
 
 		lexer.nextToken();
 		ParamList paramList = new ParamList();
@@ -304,7 +305,7 @@ public class Compiler {
 		lexer.nextToken();
 		if ( lexer.token != Symbol.LEFTCURBRACKET ) signalError.show("{ expected");
 		lexer.nextToken();
-		Method method = new Method(type,name,isStatic,isFinal, paramList);
+		Method method = new Method(type,name,isStatic,isFinal, paramList, classIsFinal);
 		currentMethod = method;
 		if (currentClass.equals("Program") && currentMethod.getName().equals("run")){
 			if (isStatic){
@@ -924,7 +925,7 @@ public class Compiler {
 			lexer.nextToken();
 			if ( lexer.token != Symbol.RIGHTPAR ) signalError.show("')' expected in 'new' statement");
 			lexer.nextToken();
-			return new ObjectExpr(kraClass);
+			return new ObjectExpr(kraClass, true);
 
 // 		PrimaryExpr ::= "super" "." Id "(" [ ExpressionList ] ")"
 		case SUPER:
@@ -1011,7 +1012,7 @@ public class Compiler {
 						KraClass classFromVariable = null;
 						if (symbolTable.getInLocal(firstId) != null)
 							classFromVariable = symbolTable.getInGlobal(symbolTable.getInLocal(firstId).getType().getName());
-						if (!messageSendToVariable.validateMethodMessage(symbolTable.getInGlobal(firstId), classFromVariable,currentMethod)){
+						if (!messageSendToVariable.validateMethodMessage(symbolTable.getInGlobal(firstId), classFromVariable,currentMethod,currentClass)){
 							if (symbolTable.getInGlobal(firstId) != null){
 								signalError.show("Static method '"+identifier+"("+messageSendToVariable.getExprListNames()+")' was not found in class '"+firstId+"'");
 							}if (symbolTable.getInLocal(firstId) != null) {
@@ -1048,7 +1049,7 @@ public class Compiler {
 				if (currentMethod.isStatic()){
 					signalError.show("Call to 'this' in a static method");
 				}
-				return new ObjectExpr(symbolTable.getInGlobal(currentClass));
+				return new ObjectExpr(symbolTable.getInGlobal(currentClass),false);
 			}
 			else {
 				lexer.nextToken();

@@ -5,6 +5,7 @@ public class MessageSendToSuper extends MessageSend {
     private ExprList exprList;
     private String name;
     private KraClass classOfMethod;
+    private Type type;
 
     public String getExprListNames() {
         return exprList.getTypeNames();
@@ -18,6 +19,7 @@ public class MessageSendToSuper extends MessageSend {
         }
         this.name = name;
         this.classOfMethod = null;
+        this.type = null;
     }
 
     public boolean validate(KraClass kraClass){
@@ -25,6 +27,7 @@ public class MessageSendToSuper extends MessageSend {
         if (superClass != null)
             this.classOfMethod = superClass.searchMethods(name, exprList.getTypeList(), false ,true);
         if (this.classOfMethod != null){
+            type = this.classOfMethod.getMethodType(name,exprList.getTypeList(),false,true);
             return true;
         }
         return false;
@@ -32,11 +35,27 @@ public class MessageSendToSuper extends MessageSend {
 
 
     public Type getType() { 
-        return null;
+        return this.type;
     }
 
     public void genC( PW pw, boolean putParenthesis ) {
         
+    }
+
+    @Override
+    public void genKra(PW pw, boolean putParenthesis) {
+        if(putParenthesis)
+            pw.print("(");
+
+        pw.print("super.");
+        pw.print(this.name);
+        pw.print("(");
+        this.exprList.genKra(pw);
+        pw.print(")");
+
+        if(putParenthesis)
+            pw.print(")");
+
     }
     
 }

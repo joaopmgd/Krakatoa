@@ -11,8 +11,11 @@ public class WriteLnStatement extends Statement {
         this.exprList = exprList;
     }
 
+    @Override
     public void genKra(PW pw){
-
+        pw.printIdent("writeln( ");
+        this.exprList.genKra(pw);
+        pw.println(" );");
     }
 
     @Override

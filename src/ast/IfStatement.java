@@ -16,7 +16,36 @@ public class IfStatement extends Statement {
     }
 
     public void genKra(PW pw){
+        pw.printIdent("if( ");
+        this.expr.genKra(pw, false);
 
+        if(this.ifStatement instanceof CompositeStatement){
+            pw.print(") ");
+            this.ifStatement.genKra(pw);
+        }
+        else{
+            pw.println(")");
+            pw.add();
+            if(this.ifStatement != null)
+                this.ifStatement.genKra(pw);
+            else
+                pw.printlnIdent(";");
+            pw.sub();
+        }
+
+        if(this.elseStatement != null){
+            pw.printIdent("else ");
+
+            if(this.elseStatement instanceof CompositeStatement){
+                this.elseStatement.genKra(pw);
+            }
+            else{
+                pw.println("");
+                pw.add();
+                this.elseStatement.genKra(pw);
+                pw.sub();
+            }
+        }
     }
 
     @Override

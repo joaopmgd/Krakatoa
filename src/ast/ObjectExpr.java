@@ -6,13 +6,11 @@ package ast;
 public class ObjectExpr extends Expr {
 
     private KraClass kraClass;
+    private boolean isNew;
 
-    public ObjectExpr (KraClass kraClass){
+    public ObjectExpr (KraClass kraClass, boolean isNew){
         this.kraClass = kraClass;
-    }
-
-    public void genKra(PW pw){
-
+        this.isNew = isNew;
     }
 
     @Override
@@ -23,5 +21,21 @@ public class ObjectExpr extends Expr {
     @Override
     public Type getType() {
         return kraClass;
+    }
+
+    @Override
+    public void genKra(PW pw, boolean putParenthesis) {
+        if(putParenthesis)
+            pw.print("(");
+
+        if(this.isNew){
+            pw.print("new ");
+            pw.print(this.kraClass.getName());
+            pw.print("()");
+        }
+        else
+            pw.print("this");
+        if(putParenthesis)
+            pw.print(")");
     }
 }

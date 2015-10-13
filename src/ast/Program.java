@@ -13,6 +13,8 @@ public class Program {
 
 
 	public void genKra(PW pw) {
+		for(KraClass c: classList)
+			c.genKra(pw);
 	}
 
 	public void genC(PW pw) {

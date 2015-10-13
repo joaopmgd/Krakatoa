@@ -59,16 +59,18 @@ public class MethodList {
         return null;
     }
 
+    public void genKra(PW pw, String scope){
+        for(Method m: methodList) {
+            m.genKra(pw, scope);
+        }
+    }
+
     public MethodList() {
         methodList = new ArrayList<Method>();
     }
 
     public void addElement(Method method) {
         methodList.add(method);
-    }
-
-    public void addMethodList(MethodList methodList) {
-        this.methodList.addAll(methodList.getMethodList());
     }
 
     public int getSize() {

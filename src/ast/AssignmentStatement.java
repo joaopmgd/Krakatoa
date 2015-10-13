@@ -14,7 +14,13 @@ public class AssignmentStatement extends Statement {
 
 
     public void genKra(PW pw){
-
+        pw.printIdent("");
+        this.leftExpr.genKra(pw, false);
+        if(this.rightExpr != null){
+            pw.print(" = ");
+            this.rightExpr.genKra(pw, false);
+        }
+        pw.println(";");
     }
 
     @Override

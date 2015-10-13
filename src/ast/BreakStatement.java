@@ -11,7 +11,7 @@ public class BreakStatement extends Statement {
 
 
     public void genKra(PW pw){
-
+        pw.printlnIdent("break;");
     }
 
     @Override

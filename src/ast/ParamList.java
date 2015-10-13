@@ -27,16 +27,8 @@ public class ParamList {
        paramList.add(v);
     }
 
-    public Iterator<Variable> elements() {
-        return paramList.iterator();
-    }
-
     public int getSize() {
         return paramList.size();
-    }
-
-    public ArrayList<Variable> getParamList() {
-        return paramList;
     }
 
     public TypeList getTypeList(){
@@ -45,5 +37,17 @@ public class ParamList {
             typeList.addElement(variable.getType());
         }
         return typeList;
+    }
+
+    public void genKra(PW pw) {
+
+        for (Iterator<Variable> iterator = paramList.iterator(); iterator.hasNext();) {
+            Variable variable = (Variable) iterator.next();
+            pw.print(variable.getType().getName());
+            pw.print(" ");
+            pw.print(variable.getName());
+            if(iterator.hasNext())
+                pw.print(", ");
+        }
     }
 }
