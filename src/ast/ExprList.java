@@ -56,7 +56,7 @@ public class ExprList{
 
     public boolean checkWriteExprListForObject(){
         for (Expr expr: this.exprList){
-            if (expr instanceof VariableExpr && expr.getType() instanceof KraClass){
+            if (expr.getType() instanceof KraClass){
                 return false;
             }
         }
@@ -78,12 +78,7 @@ public class ExprList{
 
     public boolean checkReadExprList(){
         for (Expr expr: this.exprList){
-            if ((!(expr instanceof VariableExpr)) &&
-            ((expr instanceof MessageSendToSelf && ((MessageSendToSelf) expr).getMessageName() == null))) {
-                return true;
-            }else if (expr instanceof MessageSendToVariable && ((MessageSendToVariable) expr).getMessageName() == null){
-                return true;
-            }else if ((expr.getType() instanceof KraClass) || expr.getType() == Type.voidType || expr.getType() == Type.booleanType || expr.getType() == Type.nullType || expr.getType() == Type.undefinedType){
+            if (expr.getType() != Type.stringType && expr.getType() != Type.intType){
                 return false;
             }
         }
