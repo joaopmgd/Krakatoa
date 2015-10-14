@@ -1,0 +1,8 @@
+@ce(5, "m�todo run com par�metros", "Method 'run' of class 'Program' cannot take parameters")
+
+class Program {
+    
+    public void run(int n) {  //#
+    }
+
+}
