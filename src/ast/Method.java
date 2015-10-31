@@ -1,4 +1,5 @@
 package ast;
+import lexer.*;
 
 /**
  * Created by joao on 29/09/15.
@@ -14,16 +15,30 @@ public class Method {
     private StatementList statementList;
     private boolean hasReturn;
     private boolean classIsFinal;
+    private boolean isPrivate;
+    private boolean isPublic;
 
-    public Method(Type type, String name, boolean isStatic, boolean isFinal, ParamList paramList, boolean classIsFinal){
+    public Method(Type type, String name, boolean isStatic, boolean isFinal, ParamList paramList, boolean classIsFinal, Symbol qualifier){
         this.type = type;
         this.name = name;
         this.isStatic = isStatic;
         this.isFinal = isFinal;
         this.paramList = paramList;
-        this.statementList = null;
+        if (qualifier == Symbol.PRIVATE){
+            this.isPrivate = true;
+            this.isPublic = false;
+        }else{
+            this.isPrivate = false;
+            this.isPublic = true;
+        }
+        this.statementList = new StatementList();
         this.hasReturn = false;
         this.classIsFinal = classIsFinal;
+        this.localVariableList = new LocalVariableList();
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
     }
 
     public boolean isFinal() {
@@ -75,6 +90,9 @@ public class Method {
     }
 
     public void setStatementList(StatementList statementList) {
+        if (statementList == null){
+            this.statementList = new StatementList();
+        }
         this.statementList = statementList;
     }
 
@@ -107,5 +125,38 @@ public class Method {
         pw.sub();
         pw.printlnIdent("}");
 
+    }
+
+    public void genC(PW pw, String className){
+        if (this.type == Type.stringType){
+            pw.printIdent("char * _");
+        }else if (this.type instanceof KraClass){
+            pw.printIdent("_class_"+this.type.getName() + " _");
+        }else{
+            pw.printIdent(this.type.getName() + " _");
+        }
+        if (this.isStatic){
+            pw.print("static_");
+        }
+        pw.print(className + "_" + this.name + "(");
+        if (!this.isStatic){
+            pw.print(" _class_"+className+" *this");
+            this.paramList.genC(pw,true, this.isStatic());
+        }else{
+            this.paramList.genC(pw,false, this.isStatic());
+        }
+        pw.println(" ){");
+        pw.add();
+        this.localVariableList.genC(pw);
+        if (this.statementList.searchForRead()){
+            pw.printlnIdent("char __s[512];");
+        }
+        this.statementList.genC(pw,className, this.isStatic(), this.type.getName());
+        pw.sub();
+        pw.printlnIdent("}\n");
+    }
+
+    public void genMethodNameC(PW pw, String className){
+        pw.printIdent("( void (*)() ) _" + className + "_" + this.getName());
     }
 }

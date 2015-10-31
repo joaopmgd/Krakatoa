@@ -1,7 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
-
 /**
  * Created by joao on 30/09/15.
  */
@@ -23,7 +21,17 @@ public class DeclarationStatement extends Statement {
     }
 
     @Override
-    public void genC(PW pw) {
-
+    public void genC(PW pw, String className, boolean isStatic, String methodName) {
+        if (type instanceof KraClass){
+            pw.print("_class_"+type.getName()+" ");
+        }else if (type == Type.stringType){
+            this.variableList.genCharC(pw);
+        }else{
+            pw.print(this.type.getName()+" ");
+        }
+        if (type != Type.stringType) {
+            this.variableList.genC(pw, className, 0);
+            pw.println(";");
+        }
     }
 }

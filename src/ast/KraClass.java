@@ -1,7 +1,4 @@
 package ast;
-
-import java.util.Currency;
-
 /*
  * Krakatoa Class
  */
@@ -22,6 +19,10 @@ public class KraClass extends Type {
       this.instanceVariableList = new InstanceVariableList();
       this.publicMethodList = new PublicMethodList();
       this.privateMethodList = new PrivateMethodList();
+   }
+
+   public int getPublicMethodQuantity(){
+      return publicMethodList.getSize();
    }
 
    public int validateProgram(){
@@ -52,6 +53,17 @@ public class KraClass extends Type {
          method = publicMethodList.search(methodName, typeList, isStatic);
       }
       return method.getType();
+   }
+
+   public Method getMessageMethod(String methodName, TypeList typeList, boolean isStatic,boolean superclass){
+      Method method = null;
+      if (!superclass) {
+         method = privateMethodList.search(methodName, typeList, isStatic);
+      }
+      if (method == null){
+         method = publicMethodList.search(methodName, typeList, isStatic);
+      }
+      return method;
    }
 
    public Method getMethodDeclaration(Type type, String name, TypeList typelist){
@@ -204,5 +216,86 @@ public class KraClass extends Type {
       pw.println("");
    }
 
+   public void genCSuperClass(PW pw, String className){
+      boolean commaFirst = true;
+      if (superClass != null){
+         this.superClass.genCSuperClass(pw, className);
+      }
+      if (superClass == null || superClass.getPublicMethodQuantity() == 0){
+         commaFirst = false;
+      }
+      this.publicMethodList.genSuperMethodListC(pw, this.getName(), commaFirst, className);
+   }
 
+   public void genMethodNameC(PW pw, boolean commaFirst){
+      if (superClass != null){
+         commaFirst = true;
+         this.superClass.genMethodNameC(pw,false);
+      }
+      this.publicMethodList.genMethodNameC(pw, this.getName(), commaFirst);
+   }
+
+   public boolean checkIfThereIsElements(){
+      boolean check = false;
+      if (superClass != null) {
+         check = this.superClass.checkIfThereIsElements();
+      }
+      if (this.publicMethodList.checkIfThereIsElements()){
+         check = true;
+      }
+      return check;
+   }
+
+   public void genC(PW pw) {
+      pw.printlnIdent("typedef struct _class_"+ this.getName() +" _class_"+ this.getName() +";\n");
+      pw.printlnIdent("struct _class_"+ this.getName() +"{");
+      pw.add();
+      pw.printlnIdent("Func *vt;");
+      this.instanceVariableList.genC(pw, this.getName(), false);
+      pw.sub();
+      pw.printlnIdent("};\n");
+      pw.printlnIdent("_class_" + this.getName() + " *new_" + this.getName() + "(void);\n");
+      this.instanceVariableList.genC(pw, this.getName(), true);
+      boolean commaFirst;
+
+      if (this.checkIfThereIsElements()) {
+         pw.printIdent("typedef enum {");
+         commaFirst = true;
+         if (superClass != null) {
+            this.superClass.genCSuperClass(pw, this.getName());
+         }
+         if (superClass == null || superClass.getPublicMethodQuantity() == 0) {
+            commaFirst = false;
+         }
+         this.publicMethodList.genMethodListC(pw, this.getName(), commaFirst);
+         pw.println("} _class_" + this.getName() + "_methods;\n");
+      }
+
+      this.privateMethodList.genC(pw, this.getName());
+      this.publicMethodList.genC(pw, this.getName());
+
+      pw.printlnIdent("Func VTclass_" + this.getName() + "[] = {");
+      pw.add();
+      commaFirst = true;
+      if (superClass != null){
+         this.superClass.genMethodNameC(pw,false);
+      }
+      if (superClass == null || superClass.getPublicMethodQuantity() == 0){
+         commaFirst = false;
+      }
+      this.publicMethodList.genMethodNameC(pw, this.getName(), commaFirst);
+      pw.sub();
+      pw.printlnIdent("\n};\n");
+
+      pw.printlnIdent("_class_" + this.getName() + " *new_" + this.getName() + "(){");
+      pw.add();
+      pw.printlnIdent("_class_" + this.getName() + " *t;");
+      pw.printlnIdent("if ( (t = malloc(sizeof(_class_" + this.getName() + "))) != NULL )");
+      pw.add();
+      pw.printlnIdent("t->vt = VTclass_" + this.getName() + ";");
+      pw.sub();
+      pw.printlnIdent("return t;");
+      pw.sub();
+      pw.printlnIdent("}\n");
+   }
 }

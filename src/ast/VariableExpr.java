@@ -6,8 +6,8 @@ public class VariableExpr extends Expr {
         this.v = v;
     }
     
-    public void genC( PW pw, boolean putParenthesis ) {
-        pw.print( v.getName() );
+    public void genC( PW pw, boolean putParenthesis, String className ) {
+        pw.print( "_"+this.v.getName() );
     }
     
     public Type getType() {

@@ -41,4 +41,21 @@ public class InstanceVariableList {
         if(!this.instanceVariableList.isEmpty())
             pw.println("");
     }
+
+    public void genC(PW pw, String className, boolean isStatic) {
+        for (InstanceVariable instanceVariable : instanceVariableList){
+            if (!isStatic) {
+                if (!(instanceVariable.isStatic())) {
+                    instanceVariable.genC(pw, className);
+                }
+            } else {
+                if (instanceVariable.isStatic()) {
+                    instanceVariable.genC(pw, className);
+                }
+            }
+        }
+        if(isStatic){
+            pw.println("");
+        }
+    }
 }

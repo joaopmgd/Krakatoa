@@ -31,4 +31,24 @@ public class InstanceVariable extends Variable {
         pw.print(this.getName());
         pw.println(";");
     }
+
+    public void genC(PW pw, String className){
+        if (isStatic()){
+            if (this.getType() == Type.stringType){
+                pw.printlnIdent("char * _static_"+className+"_"+this.getName()+";");
+            }else if (this.getType() instanceof KraClass){
+                pw.printlnIdent("_class_"+this.getType().getName()+"* _static_"+className+"_"+this.getName()+";");
+            }else{
+                pw.printlnIdent(this.getType().getName()+" _static_"+className+"_"+this.getName()+";");
+            }
+        }else{
+            if (this.getType() == Type.stringType){
+                pw.printlnIdent("char * _"+className+"_"+this.getName()+";");
+            }else if (this.getType() instanceof KraClass){
+                pw.printlnIdent("_class_"+this.getType().getName()+"* _"+className+"_"+this.getName()+";");
+            }else{
+                pw.printlnIdent(this.getType().getName()+" _"+className+"_"+this.getName()+";");
+            }
+        }
+    }
 }

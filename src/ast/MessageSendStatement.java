@@ -3,7 +3,7 @@ package ast;
 public class MessageSendStatement extends Statement { 
 
 
-   public void genC( PW pw ) {
+   public void genC( PW pw, String className, boolean isStatic, String methodName) {
       pw.printIdent("");
       // messageSend.genC(pw);
       pw.println(";");
@@ -19,5 +19,4 @@ public class MessageSendStatement extends Statement {
    private MessageSend  messageSend;
 
 }
-
 

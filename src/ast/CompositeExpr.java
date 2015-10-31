@@ -29,17 +29,31 @@ public class CompositeExpr extends Expr {
     }
     
     @Override
-	public void genC( PW pw, boolean putParenthesis ) {
+	public void genC( PW pw, boolean putParenthesis, String className ) {
         if ( putParenthesis )
           pw.print("(");
-        left.genC(pw, true);
+        boolean left = false, right = false;
+        if (this.left.getType() instanceof KraClass && this.right.getType() instanceof KraClass){
+            if (((KraClass) this.left.getType()).searchSuperClassName(this.right.getType().getName())){
+                left = true;
+            }else if (((KraClass) this.right.getType()).searchSuperClassName(this.left.getType().getName())){
+                right = true;
+            }
+        }
+        if (left){
+            pw.print("(_class_"+this.right.getType().getName()+"*) ");
+        }
+        this.left.genC(pw, true, className);
         String strSymbol = arrayOper.get(oper);
         if ( strSymbol == null ) {
         	pw.println("internal error in CompositeExpr::genC");
         }
         else
             pw.print(" " + strSymbol + " ");
-        right.genC(pw, true);
+        if (right){
+            pw.print("(_class_"+this.left.getType().getName()+"*) ");
+        }
+        this.right.genC(pw, true,className);
         if ( putParenthesis )
           pw.print(")");
     }
@@ -73,6 +87,7 @@ public class CompositeExpr extends Expr {
         arrayOper.put(Symbol.EQ, "==");
         arrayOper.put(Symbol.ASSIGN, "=");
         arrayOper.put(Symbol.AND, "&&");
+        arrayOper.put(Symbol.PERCENTAGE, "%");
         arrayOper.put(Symbol.OR, "||");
     }
 }

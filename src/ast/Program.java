@@ -18,12 +18,29 @@ public class Program {
 	}
 
 	public void genC(PW pw) {
-	}
-	
-	public ArrayList<KraClass> getClassList() {
-		return classList;
-	}
+		pw.println("#include <stdlib.h>");
+		pw.println("#include <string.h>");
+		pw.println("#include <stdio.h>\n");
 
+		pw.println("typedef int boolean;");
+		pw.println("#define true  1");
+		pw.println("#define false 0\n");
+
+		pw.println("typedef void (*Func)();\n");
+
+		for (KraClass c: classList){
+			c.genC(pw);
+		}
+
+		pw.printlnIdent("int main() {");
+		pw.add();
+		pw.printlnIdent("_class_Program *program;");
+		pw.printlnIdent("program = new_Program();");
+		pw.printlnIdent("( ( void (*)(_class_Program *) ) program->vt[0] )(program);");
+		pw.printlnIdent("return 0;");
+		pw.sub();
+		pw.printIdent("}");
+	}
 
 	public ArrayList<MetaobjectCall> getMetaobjectCallList() {
 		return metaobjectCallList;

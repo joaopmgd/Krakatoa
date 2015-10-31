@@ -305,7 +305,7 @@ public class Compiler {
 		lexer.nextToken();
 		if ( lexer.token != Symbol.LEFTCURBRACKET ) signalError.show("{ expected");
 		lexer.nextToken();
-		Method method = new Method(type,name,isStatic,isFinal, paramList, classIsFinal);
+		Method method = new Method(type,name,isStatic,isFinal, paramList, classIsFinal, qualifier);
 		currentMethod = method;
 		if (currentClass.equals("Program") && currentMethod.getName().equals("run")){
 			if (isStatic){
@@ -545,6 +545,22 @@ public class Compiler {
 			if ( lexer.token == Symbol.IDENT && lexer.viewNextToken() == Symbol.IDENT){
 				return localDec();
 			}else {
+				if (lexer.token == Symbol.IDENT && (lexer.viewNextToken() == Symbol.PLUS || lexer.viewNextToken()  == Symbol.MINUS)){
+					String name = lexer.getStringValue();
+					Variable variable = symbolTable.getInLocal(name);
+					if (variable == null){
+						signalError.show("Variable '"+name+"' was not declared");
+					}
+					lexer.nextToken();
+					Symbol operation = lexer.token;
+					lexer.nextToken();
+					if (lexer.token != operation){
+						signalError.show(operation+" expected after "+operation);
+					}
+					lexer.nextToken();
+					return new OperationStatement(variable, operation);
+				}
+
 				if ( lexer.viewNextToken() != Symbol.DOT && lexer.viewNextToken() != Symbol.ASSIGN) {
 					signalError.show("'.' or '=' expected after an identifier OR statement");
 				}
@@ -818,9 +834,9 @@ public class Compiler {
 
 		Symbol op;
 		Expr left = signalFactor();
-		while ((op = lexer.token) == Symbol.DIV || op == Symbol.MULT || op == Symbol.AND) {
+		while ((op = lexer.token) == Symbol.DIV || op == Symbol.MULT || op == Symbol.AND || op == Symbol.PERCENTAGE) {
 			if (left.getType() != Type.booleanType && op == Symbol.AND){
-				signalError.show("type 'int' does not support operation '"+op+"'");
+				signalError.show("type '"+left.getType().getName()+"' does not support operation '"+op+"'");
 			}
 			lexer.nextToken();
 			Expr right = signalFactor();

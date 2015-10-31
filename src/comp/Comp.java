@@ -198,7 +198,7 @@ public class Comp {
 
 			try {
 				numChRead = stream.read( input, 0, (int ) file.length() );
-				if ( numChRead != file.length()) {
+				if ( numChRead != file.length()-1) {
 					System.out.print(numChRead -  file.length());
 					System.out.println(" : "+filename);
 					outError.println("Read error");
@@ -234,24 +234,28 @@ public class Comp {
         	   
         	   
         	   
-               FileOutputStream  outputStream;
+               FileOutputStream  outputStreamKra, outputStreamC;
                try {
-                  outputStream = new FileOutputStream(outputFileName + ".kra2");
+				   outputStreamKra = new FileOutputStream(outputFileName + ".kra2");
+				   outputStreamC = new FileOutputStream(outputFileName + ".c");
                } catch ( IOException e ) {
                    String msg = "File " + outputFileName + " was not found";
                    outError.println(msg);
                    return ;
                }
-               PrintWriter printWriter = new PrintWriter(outputStream);
-        	   
-        	   
-              PW pw = new PW();
-              pw.set(printWriter);
-              program.genKra( pw );
-              if ( printWriter.checkError() ) {
-                 outError.println("There was an error in the output");
-              }
-              printWriter.close();
+               PrintWriter printWriterKra = new PrintWriter(outputStreamKra);
+			   PrintWriter printWriterC = new PrintWriter(outputStreamC);
+
+			   PW pw = new PW();
+			   pw.set(printWriterKra);
+			   program.genKra(pw );
+			   pw.set(printWriterC);
+			   program.genC(pw );
+			   if ( printWriterKra.checkError() || printWriterC.checkError()) {
+				   outError.println("There was an error in the output");
+			   }
+			   printWriterKra.close();
+			   printWriterC.close();
            }
 	}
 

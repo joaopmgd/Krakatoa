@@ -13,9 +13,24 @@ public class ObjectExpr extends Expr {
         this.isNew = isNew;
     }
 
-    @Override
-    public void genC(PW pw, boolean putParenthesis) {
+    public boolean isNew() {
+        return isNew;
+    }
 
+    @Override
+    public void genC(PW pw, boolean putParenthesis, String className) {
+        if(putParenthesis)
+            pw.print("(");
+
+        if(this.isNew){
+            pw.print("new_");
+            pw.print(this.kraClass.getName());
+            pw.print("()");
+        }
+        else
+            pw.print("this");
+        if(putParenthesis)
+            pw.print(")");
     }
 
     @Override

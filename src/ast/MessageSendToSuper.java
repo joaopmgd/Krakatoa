@@ -38,8 +38,17 @@ public class MessageSendToSuper extends MessageSend {
         return this.type;
     }
 
-    public void genC( PW pw, boolean putParenthesis ) {
-        
+
+    public void genC( PW pw, boolean putParenthesis, String className ) {
+        if(putParenthesis)
+            pw.print("(");
+
+        pw.print("_"+this.classOfMethod.getName()+"_"+this.name+"( (_class_"+this.classOfMethod.getName()+" *) this");
+        this.exprList.genSuperC(pw, className, true, this.classOfMethod.getName());
+        pw.print(")");
+
+        if(putParenthesis)
+            pw.print(")");
     }
 
     @Override

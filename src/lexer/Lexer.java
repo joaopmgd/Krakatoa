@@ -208,6 +208,9 @@ public class Lexer {
                     case '.' :
                       token = Symbol.DOT;
                       break;
+                    case '%' :
+                        token = Symbol.PERCENTAGE;
+                        break;
                     case '&' :
                       if ( input[tokenPos] == '&' ) {
                          tokenPos++;

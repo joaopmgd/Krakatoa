@@ -9,6 +9,7 @@ public class MessageSendToSelf extends MessageSend {
     private String messageName;
     private ExprList exprList;
     private Method method;
+    private KraClass methodClass;
 
     public Method getMethod() {
         return method;
@@ -33,6 +34,7 @@ public class MessageSendToSelf extends MessageSend {
         this.messageName = null;
         this.exprList = new ExprList();
         this.method = null;
+        this.methodClass = null;
     }
 
     public MessageSendToSelf(KraClass currentClass, String messageName, ExprList exprList){
@@ -46,8 +48,9 @@ public class MessageSendToSelf extends MessageSend {
             this.exprList = exprList;
         }
         this.method = null;
+        this.methodClass = null;
     }
-
+//
     public MessageSendToSelf(KraClass currentClass, InstanceVariable instanceVariable, String messageName, ExprList exprList, KraClass instanceVariableClass){
         this.currentClass = currentClass;
         this.instanceVariableClass = instanceVariableClass;
@@ -59,12 +62,14 @@ public class MessageSendToSelf extends MessageSend {
             this.exprList = exprList;
         }
         this.method = null;
+        this.methodClass = null;
     }
 
     public boolean validateInstanceMessage() {
         KraClass methodClass = this.instanceVariableClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,true);
         if (methodClass != null){
             this.method = methodClass.getMethod(this.messageName,exprList.getTypeList());
+            this.methodClass = methodClass;
             return true;
         }
         return false;
@@ -74,10 +79,12 @@ public class MessageSendToSelf extends MessageSend {
         KraClass methodClass = this.currentClass.searchMethods(this.messageName,this.exprList.getTypeList(),false,false);
         if (methodClass != null){
             this.method = methodClass.getMethodFromThis(this.messageName,exprList.getTypeList());
+            this.methodClass = methodClass;
             return true;
         }else{
             if (this.currentClass.compareCurrentMethod(this.messageName,this.exprList.getTypeList(),false,currentMethod)){
                 this.method = currentMethod;
+                this.methodClass = currentClass;
                 return true;
             }
         }
@@ -110,9 +117,50 @@ public class MessageSendToSelf extends MessageSend {
         if(putParenthesis)
             pw.print(")");
     }
-    
-    public void genC( PW pw, boolean putParenthesis ) {
+
+    public void genC( PW pw, boolean putParenthesis, String className ) {
+        if (putParenthesis){
+            pw.print("(");
+        }
+
+        if (this.instanceVariable != null && this.messageName == null){
+            pw.print("this");
+            pw.print("->_"+className+"_"+ this.instanceVariable.getName());
+
+        }
+
+        if (this.messageName != null) {
+
+            if (this.method.isPrivate()){
+                pw.print("_"+this.methodClass.getName()+"_"+this.method.getName()+"(this");
+                this.exprList.genC(pw, className, true);
+                pw.print(")");
+            }else {
+                if (this.method.getType() == Type.stringType) {
+                    pw.print("( ( ( char * (*) (_class_" + this.methodClass.getName() + " *");
+                } else if (this.method.getType() instanceof KraClass) {
+                    pw.print("( ( ( _class_"+this.method.getType().getName()+" (*) (_class_" + this.methodClass.getName() + " *");
+                }else{
+                    pw.print("( ( ( " + this.method.getType().getName() + " (*) (_class_" + this.methodClass.getName() + " *");
+                }
+                this.exprList.genTypeNameC(pw, true, this.method);
+                if (this.instanceVariable != null && this.messageName != null){
+                    pw.print(") ) this->_"+className+"_"+this.instanceVariable.getName()+"->");
+                }else{
+                    pw.print(") ) this->");
+                }
+                pw.print("vt[_enum_" + this.methodClass.getName() + "_");
+                if ((!(methodClass.getName().equals(className))) && this.methodClass.searchSuperClassName(className)) {
+                    pw.print(className + "_");
+                }
+                pw.print(this.method.getName() + "] )( (_class_" + this.methodClass.getName() + " *) this ");
+                this.exprList.genC(pw, className, true);
+                pw.print(") )");
+            }
+        }
+
+        if(putParenthesis) {
+            pw.print(")");
+        }
     }
-    
-    
 }

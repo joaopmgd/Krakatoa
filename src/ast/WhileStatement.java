@@ -1,5 +1,7 @@
 package ast;
 
+import comp.Comp;
+
 /**
  * Created by joao on 29/09/15.
  */
@@ -34,8 +36,35 @@ public class WhileStatement extends Statement {
 
     }
 
-    @Override
-    public void genC(PW pw) {
+    public boolean searchForRead(){
+        if (this.statement instanceof CompositeStatement){
+            return ((CompositeStatement) statement).searchForRead();
+        }
+        if (this.statement instanceof IfStatement){
+            return ((IfStatement) statement).searchForRead();
+        }
+        if (statement instanceof WhileStatement){
+            return ((WhileStatement) statement).searchForRead();
+        }
+        return false;
+    }
 
+    @Override
+    public void genC(PW pw, String className, boolean isStatic, String methodName) {
+        pw.print("while( ");
+        this.expr.genC(pw, false, className);
+        pw.println(" )");
+        if (!(this.statement instanceof CompositeStatement)){
+            pw.add();
+            pw.printIdent("");
+            if (this.statement != null){
+                this.statement.genC(pw, className, isStatic, methodName);
+            }else{
+                pw.println(";");
+            }
+            pw.sub();
+        } else {
+            this.statement.genC(pw, className, isStatic, methodName);
+        }
     }
 }

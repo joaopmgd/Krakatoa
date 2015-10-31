@@ -6,8 +6,8 @@ public class LiteralInt extends Expr {
         this.value = value;
     }
 
-    public void genC( PW pw, boolean putParenthesis ) {
-        pw.printIdent("" + value);
+    public void genC( PW pw, boolean putParenthesis, String className ) {
+        pw.print(""+ value);
     }
     
     public Type getType() {

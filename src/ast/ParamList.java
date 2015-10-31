@@ -6,6 +6,10 @@ public class ParamList {
 
     private ArrayList<Variable> paramList;
 
+    public ArrayList<Variable> getParamList() {
+        return paramList;
+    }
+
     public String getParamListNames() {
         String names = "";
         int i = paramList.size()-1;
@@ -48,6 +52,33 @@ public class ParamList {
             pw.print(variable.getName());
             if(iterator.hasNext())
                 pw.print(", ");
+        }
+    }
+
+    public void genC(PW pw, boolean commaFirst, boolean isStatic){
+        int size = this.paramList.size();
+        for(Variable variable: paramList) {
+            if (size > 0 && commaFirst) {
+                if (variable.getType() == Type.stringType) {
+                    pw.print(", char *");
+                }else if (variable.getType() instanceof KraClass){
+                    pw.print(", _class_" + variable.getType().getName() + " *");
+                }else{
+                    pw.print(", "+variable.getType().getName()+" ");
+                }
+                variable.genC(pw);
+            }else if (!commaFirst) {
+                if (variable.getType() == Type.stringType){
+                    pw.print("char *");
+                }else if (variable.getType() instanceof KraClass){
+                    pw.print("_class_"+variable.getType().getName()+" *");
+                }else{
+                    pw.print(variable.getType().getName()+" ");
+                }
+                variable.genC(pw);
+                if ( --size > 0 )
+                    pw.print(", ");
+            }
         }
     }
 }

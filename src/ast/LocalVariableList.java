@@ -5,15 +5,7 @@ import java.util.*;
 public class LocalVariableList {
 
     public LocalVariableList() {
-       localList = new ArrayList<Variable>();
-    }
-
-    public void addElement(Variable v) {
-       localList.add(v);
-    }
-
-    public Iterator<Variable> elements() {
-        return localList.iterator();
+       localList = new ArrayList<>();
     }
 
     public int getSize() {
@@ -29,6 +21,12 @@ public class LocalVariableList {
             pw.println(";");
         }
         pw.println("");
+    }
+
+    public void genC(PW pw){
+        for (Variable variable : localList) {
+            pw.printlnIdent(variable.getType().getName()+" "+variable.getName()+";");
+        }
     }
 
     private ArrayList<Variable> localList;

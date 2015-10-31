@@ -6,9 +6,9 @@ public class ParenthesisExpr extends Expr {
         this.expr = expr;
     }
     
-    public void genC( PW pw, boolean putParenthesis ) {
+    public void genC( PW pw, boolean putParenthesis, String className ) {
         pw.print("(");
-        expr.genC(pw, false);
+        expr.genC(pw, false, className);
         pw.printIdent(")");
     }
     

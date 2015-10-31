@@ -36,6 +36,7 @@ public enum Symbol {
     NOT("!"),
     NULL("null"),
     OR("||"),
+    PERCENTAGE("%"),
     PLUS("+"),
     PRIVATE("private"),
     PUBLIC("public"),

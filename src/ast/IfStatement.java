@@ -48,8 +48,59 @@ public class IfStatement extends Statement {
         }
     }
 
-    @Override
-    public void genC(PW pw) {
+    public boolean searchForRead(){
+        if (ifStatement instanceof CompositeStatement){
+            return ((CompositeStatement) ifStatement).searchForRead();
+        }
+        if (ifStatement instanceof IfStatement){
+            return ((IfStatement) ifStatement).searchForRead();
+        }
+        if (ifStatement instanceof WhileStatement){
+            return ((WhileStatement) ifStatement).searchForRead();
+        }
+        if (elseStatement instanceof CompositeStatement){
+            return ((CompositeStatement) elseStatement).searchForRead();
+        }
+        if (elseStatement instanceof IfStatement){
+            return ((IfStatement) elseStatement).searchForRead();
+        }
+        if (elseStatement instanceof WhileStatement){
+            return ((WhileStatement) elseStatement).searchForRead();
+        }
+        return false;
+    }
 
+    @Override
+    public void genC(PW pw, String className, boolean isStatic, String methodName) {
+        pw.print("if (");
+        expr.genC(pw, false, className);
+        pw.println(")");
+        if (!(this.ifStatement instanceof CompositeStatement)){
+            pw.add();
+            pw.printIdent("");
+            if (this.ifStatement != null){
+                this.ifStatement.genC(pw, className, isStatic, methodName);
+            }else{
+                pw.println(";");
+            }
+            pw.sub();
+        }else{
+            this.ifStatement.genC(pw,className, isStatic, methodName);
+        }
+        if (this.elseStatement != null){
+            pw.printlnIdent("else");
+            if (!(this.elseStatement instanceof CompositeStatement)){
+                pw.add();
+                pw.printIdent("");
+                if (this.ifStatement != null){
+                    this.elseStatement.genC(pw, className, isStatic, methodName);
+                }else{
+                    pw.println(";");
+                }
+                pw.sub();
+            }else{
+                this.elseStatement.genC(pw,className, isStatic, methodName);
+            }
+        }
     }
 }

@@ -23,7 +23,15 @@ public class ReturnStatement extends Statement {
     }
 
     @Override
-    public void genC(PW pw) {
-
+    public void genC(PW pw, String className, boolean isStatic, String methodType) {
+        pw.print("return ");
+        if (this.expr instanceof ObjectExpr && ((ObjectExpr)expr).isNew() || this.expr.getType() instanceof KraClass){
+            pw.print("*");
+        }
+        if (!(this.expr.getType().getName().equals(methodType))){
+            pw.print("(_class_"+methodType+"*)");
+        }
+        expr.genC(pw, false, className);
+        pw.println(";");
     }
 }

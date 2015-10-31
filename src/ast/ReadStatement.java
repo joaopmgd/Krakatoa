@@ -19,7 +19,9 @@ public class ReadStatement extends Statement {
     }
 
     @Override
-    public void genC(PW pw) {
+    public void genC(PW pw, String className, boolean isStatic, String methodName) {
 
+        pw.println("gets(__s);");
+        this.exprList.genReadC(pw,className);
     }
 }

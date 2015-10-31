@@ -85,13 +85,126 @@ public class ExprList{
         return true;
     }
 
-    public void genC( PW pw ) {
-
+    public void genC( PW pw, String className, boolean commaFirst ) {
         int size = exprList.size();
         for ( Expr e : exprList ) {
-        	e.genC(pw, false);
-            if ( --size > 0 )
+            if (size > 0 && commaFirst) {
                 pw.print(", ");
+                e.genC(pw, false, className);
+            }
+            else if (!commaFirst) {
+                e.genC(pw, false, className);
+                if ( --size > 0 )
+                    pw.print(", ");
+            }
+        }
+    }
+
+
+
+    public void genSuperC( PW pw, String className, boolean commaFirst, String superClassName ) {
+        int size = exprList.size();
+        for ( Expr e : exprList ) {
+            if (size > 0 && commaFirst) {
+                pw.print(", ");
+                if (e.getType() instanceof KraClass && (e instanceof MessageSendToSelf) || (e instanceof ObjectExpr && !((ObjectExpr)e).isNew())){
+                    pw.print("(_class_"+superClassName+" *) ");
+                }
+                e.genC(pw, false, className);
+            }
+            else if (!commaFirst) {
+                if (e.getType() instanceof KraClass && (e instanceof MessageSendToSelf) || (e instanceof ObjectExpr && !((ObjectExpr)e).isNew())){
+                    pw.print("(_class_"+superClassName+" *) ");
+                }
+                e.genC(pw, false, className);
+                if ( --size > 0 )
+                    pw.print(", ");
+            }
+        }
+    }
+
+    public void genReadC(PW pw, String className){
+        for (Expr expr:exprList){
+            if (expr.getType() == Type.intType){
+                pw.printIdent("sscanf(__s,\"%d\",&");
+                expr.genC(pw, false, className);
+                pw.println(");");
+            }else{
+                pw.printIdent("");
+                expr.genC(pw, false, className);
+                pw.println(" = malloc(strlen(__s)+1);");
+                pw.printIdent("strcpy(");
+                expr.genC(pw, false, className);
+                pw.println(",__s);");
+            }
+        }
+    }
+
+    public void genPrintC(PW pw, String className){
+        int count = 0;
+        for (Expr expr:exprList){
+            if (expr.getType() == Type.intType){
+                if (count > 0){
+                    pw.printIdent("");
+                }
+                pw.print("printf(\"%d\",");
+                expr.genC(pw, false, className);
+                pw.println(");");
+                count++;
+            }else{
+                if (count > 0){
+                    pw.printIdent("");
+                }
+                pw.print("puts(");
+                expr.genC(pw,false,className);
+                pw.println(");");
+                count++;
+            }
+        }
+    }
+
+    public void genTypeNameC(PW pw, boolean commaFirst, Method method){
+        int size = exprList.size();
+        int id = 0;
+        for ( Expr e : exprList ) {
+            if (size > 0 && commaFirst)
+                if (e.getType() == Type.stringType){
+                    pw.print(", char *");
+                }else if (e.getType() instanceof KraClass){
+                    pw.print(", _class_"+e.getType().getName()+"*");
+                }else{
+                    pw.print(", ");
+                    if (e instanceof NullExpr){
+                        if(method.getParamList().getParamList().get(id).getType() == Type.stringType){
+                            pw.print("char *");
+                        }else if(method.getParamList().getParamList().get(id).getType() instanceof KraClass){
+                            pw.print("_class_"+method.getParamList().getParamList().get(id).getType().getName()+"*");
+                        }
+                    }else{
+                        pw.print(e.getType().getName());
+                    }
+                }
+            else if (!commaFirst) {
+                if (e.getType() == Type.stringType){
+                    pw.print("char *");
+                }else if (e.getType() instanceof KraClass){
+                    pw.print("_class_"+e.getType().getName()+"*");
+                }else{
+                    if (e instanceof NullExpr){
+                        if(method.getParamList().getParamList().get(id).getType() == Type.stringType){
+                            pw.print("char *");
+                        }else if(method.getParamList().getParamList().get(id).getType() instanceof KraClass){
+                            pw.print("_class_"+method.getParamList().getParamList().get(id).getType().getName());
+                        }
+                    }else{
+                        pw.print(e.getType().getName());
+                    }
+                }
+                if (--size > 0)
+                    pw.print(", ");
+            }
+            size--;
+            id++;
         }
     }
 

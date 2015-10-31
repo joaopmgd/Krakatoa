@@ -7,6 +7,10 @@ public class CompositeStatement extends Statement {
 
     private StatementList statementList;
 
+    public boolean searchForRead() {
+        return this.statementList.searchForRead();
+    }
+
     public CompositeStatement(StatementList statementList){
         this.statementList = statementList;
     }
@@ -20,7 +24,11 @@ public class CompositeStatement extends Statement {
     }
 
     @Override
-    public void genC(PW pw) {
-
+    public void genC(PW pw, String className, boolean isStatic, String methodName) {
+        pw.printlnIdent("{");
+        pw.add();
+        this.statementList.genC(pw, className, isStatic, methodName);
+        pw.sub();
+        pw.printlnIdent("}");
     }
 }

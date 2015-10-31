@@ -31,5 +31,32 @@ public class VariableList {
         }
     }
 
+    public void genCharC(PW pw){
+        int size = this.variableList.size();
+        for (Variable variable: variableList){
+            if (size != this.variableList.size()){
+                pw.printIdent("");
+            }
+            pw.print("char *");
+            variable.genC(pw);
+            pw.println(";");
+            size--;
+        }
+    }
+
+    public void genC(PW pw, String className, int type){
+        int size = this.variableList.size();
+        if (type == 0){ // declaration
+            for (Variable variable: variableList){
+                if (variable.getType() instanceof KraClass){
+                    pw.print("*");
+                }
+                variable.genC(pw);
+                if ( --size > 0 )
+                    pw.print(", ");
+            }
+        }
+    }
+
     private ArrayList<Variable> variableList;
 }
