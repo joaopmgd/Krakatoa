@@ -42,29 +42,39 @@ public class AssignmentStatement extends Statement {
             pw.println(";");
         }else if ((this.rightExpr instanceof MessageSendToSelf && ((MessageSendToSelf)this.rightExpr).getMessageName() != null && ((MessageSendToSelf)this.rightExpr).getMethod().getType() instanceof KraClass )){
             if (((MessageSendToSelf) this.rightExpr).getMethod().getType().getName().equals(this.leftExpr.getType().getName())){
-                pw.print("*");
+                if (((MessageSendToSelf) this.rightExpr).getMethod().isStatic()){
+                    pw.print("*");
+                }
                 this.leftExpr.genC(pw, false, className);
                 pw.print(" = ");
                 this.rightExpr.genC(pw, false, className);
                 pw.println(";");
             }else{
+                if (((MessageSendToSelf) this.rightExpr).getMethod().isStatic()){
+                    pw.print("*");
+                }
                 this.leftExpr.genC(pw, false, className);
                 pw.print(" = ");
-                pw.print("(_class_" + leftExpr.getType().getName() + "*)");
+                pw.print("(_class_" + leftExpr.getType().getName() + " *) ");
                 this.rightExpr.genC(pw, false, className);
                 pw.println(";");
             }
         }else if ((this.rightExpr instanceof MessageSendToVariable && ((MessageSendToVariable)this.rightExpr).getMessageName() != null && ((MessageSendToVariable)this.rightExpr).getMethod().getType() instanceof KraClass )){
             if (((MessageSendToVariable) this.rightExpr).getMethod().getType().getName().equals(this.leftExpr.getType().getName()) && ((MessageSendToVariable) this.rightExpr).getMethod().isStatic()){
-                pw.print("*");
+                if (((MessageSendToVariable) this.rightExpr).getMethod().isStatic()){
+                    pw.print("*");
+                }
                 this.leftExpr.genC(pw, false, className);
                 pw.print(" = ");
                 this.rightExpr.genC(pw, false, className);
                 pw.println(";");
             }else{
+                if (((MessageSendToVariable) this.rightExpr).getMethod().isStatic()){
+                    pw.print("*");
+                }
                 this.leftExpr.genC(pw, false, className);
                 pw.print(" = ");
-                pw.print("(_class_" + leftExpr.getType().getName() + "*)");
+                pw.print("(_class_" + leftExpr.getType().getName() + " *) ");
                 this.rightExpr.genC(pw, false, className);
                 pw.println(";");
             }

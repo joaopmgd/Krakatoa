@@ -1,0 +1,16 @@
+class A {
+   static private int n;
+   static public int get() {
+		return A.n; 
+	}
+   static public void set( int n ) {
+      	A.n = n;
+	}
+}
+
+class Program {
+   public void run() {
+		A.set(0);
+      	write(A.get());
+   }
+}

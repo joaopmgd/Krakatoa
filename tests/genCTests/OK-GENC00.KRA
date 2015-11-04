@@ -1,0 +1,24 @@
+class Program {
+   public void run() {
+      int i, b;
+      boolean primo;
+      String msg;
+      write( "Ola, este e o meu primeiro programa" );
+      write( "Digite um numero: ");
+      read(b);
+      primo = true;
+      i = 2;
+      while ( i < b ) {
+         if ( b%i == 0 ) {
+            primo = false;
+            break;
+         } else
+            i++;
+      }
+      if ( primo )
+         msg = "Este numero e primo";
+      else
+         msg = "Este numero nao e primo";
+      write(msg);
+   }
+}

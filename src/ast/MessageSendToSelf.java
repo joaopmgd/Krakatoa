@@ -118,6 +118,9 @@ public class MessageSendToSelf extends MessageSend {
             pw.print(")");
     }
 
+//    this.m();
+//    _a = (_class_A *) ( ( _class_B  * (*)() ) this->vt[0])(this);
+//
     public void genC( PW pw, boolean putParenthesis, String className ) {
         if (putParenthesis){
             pw.print("(");
@@ -139,7 +142,11 @@ public class MessageSendToSelf extends MessageSend {
                 if (this.method.getType() == Type.stringType) {
                     pw.print("( ( ( char * (*) (_class_" + this.methodClass.getName() + " *");
                 } else if (this.method.getType() instanceof KraClass) {
-                    pw.print("( ( ( _class_"+this.method.getType().getName()+" (*) (_class_" + this.methodClass.getName() + " *");
+                    if (this.exprList.getSize() == 0){
+                        pw.print("( ( ( _class_"+this.method.getType().getName()+" * (*) (");
+                    }else{
+                        pw.print("( ( ( _class_"+this.method.getType().getName()+" * (*) (_class_" + this.methodClass.getName() + " *");
+                    }
                 }else{
                     pw.print("( ( ( " + this.method.getType().getName() + " (*) (_class_" + this.methodClass.getName() + " *");
                 }

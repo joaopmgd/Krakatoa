@@ -100,7 +100,9 @@ public class ExprList{
         }
     }
 
-
+    public int getSize(){
+        return this.exprList.size();
+    }
 
     public void genSuperC( PW pw, String className, boolean commaFirst, String superClassName ) {
         int size = exprList.size();
