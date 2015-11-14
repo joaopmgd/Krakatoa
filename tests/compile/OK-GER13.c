@@ -33,8 +33,8 @@ void _A_m1( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
    ( void (*)() ) _A_m1
 };
 
@@ -60,9 +60,9 @@ void _B_m2( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_m1,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _A_m1, 
    ( void (*)() ) _B_m2
 };
 
@@ -82,7 +82,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_get, _enum_A_C_set, _enum_A_C_m1, _enum_B_C_m2, _enum_C_m1, _enum_C_teste} _class_C_methods;
+typedef enum {_enum_A_C_get, _enum_A_C_set, _enum_B_C_m2, _enum_C_m1, _enum_C_teste} _class_C_methods;
 
 void _C_m1( _class_C *this ){
    printf("%d",8);
@@ -93,11 +93,10 @@ void _C_teste( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _B_m2,
-   ( void (*)() ) _C_m1,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _B_m2, 
+   ( void (*)() ) _C_m1, 
    ( void (*)() ) _C_teste
 };
 
@@ -117,19 +116,17 @@ struct _class_D{
 _class_D *new_D(void);
 
 
-typedef enum {_enum_A_D_get, _enum_A_D_set, _enum_A_D_m1, _enum_B_D_m2, _enum_C_D_m1, _enum_C_D_teste, _enum_D_m1} _class_D_methods;
+typedef enum {_enum_A_D_get, _enum_A_D_set, _enum_B_D_m2, _enum_C_D_teste, _enum_D_m1} _class_D_methods;
 
 void _D_m1( _class_D *this ){
    printf("%d",9);
 }
 
 Func VTclass_D[] = {
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _B_m2,
-   ( void (*)() ) _C_m1,
-   ( void (*)() ) _C_teste,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _B_m2, 
+   ( void (*)() ) _C_teste, 
    ( void (*)() ) _D_m1
 };
 

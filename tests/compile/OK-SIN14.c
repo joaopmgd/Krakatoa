@@ -35,8 +35,8 @@ int _Point_getY( _class_Point *this ){
 }
 
 Func VTclass_Point[] = {
-   ( void (*)() ) _Point_set,
-   ( void (*)() ) _Point_getX,
+   ( void (*)() ) _Point_set, 
+   ( void (*)() ) _Point_getX, 
    ( void (*)() ) _Point_getY
 };
 
@@ -69,7 +69,7 @@ _class_Point _Program_getPoint( _class_Program *this ){
 }
 
 Func VTclass_Program[] = {
-   ( void (*)() ) _Program_run,
+   ( void (*)() ) _Program_run, 
    ( void (*)() ) _Program_getPoint
 };
 

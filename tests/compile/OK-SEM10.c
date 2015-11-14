@@ -48,7 +48,7 @@ void _B_second( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_first,
+   ( void (*)() ) _A_first, 
    ( void (*)() ) _B_second
 };
 
@@ -74,8 +74,8 @@ void _C_third( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_first,
-   ( void (*)() ) _B_second,
+   ( void (*)() ) _A_first, 
+   ( void (*)() ) _B_second, 
    ( void (*)() ) _C_third
 };
 

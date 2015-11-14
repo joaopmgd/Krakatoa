@@ -29,7 +29,7 @@ int _A_get( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_set,
+   ( void (*)() ) _A_set, 
    ( void (*)() ) _A_get
 };
 
@@ -49,7 +49,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_set, _enum_A_B_get, _enum_B_set} _class_B_methods;
+typedef enum {_enum_A_B_get, _enum_B_set} _class_B_methods;
 
 void _B_set( _class_B *this, int _pn ){
    printf("%d",_pn);
@@ -57,8 +57,7 @@ void _B_set( _class_B *this, int _pn ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_get,
+   ( void (*)() ) _A_get, 
    ( void (*)() ) _B_set
 };
 
@@ -107,8 +106,8 @@ void _Program_run( _class_Program *this ){
 }
 
 Func VTclass_Program[] = {
-   ( void (*)() ) _Program_m,
-   ( void (*)() ) _Program_p,
+   ( void (*)() ) _Program_m, 
+   ( void (*)() ) _Program_p, 
    ( void (*)() ) _Program_run
 };
 

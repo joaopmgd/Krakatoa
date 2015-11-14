@@ -42,13 +42,12 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_m, _enum_B_m} _class_B_methods;
+typedef enum {_enum_B_m} _class_B_methods;
 
 void _B_m( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_m,
    ( void (*)() ) _B_m
 };
 
@@ -68,14 +67,13 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_m, _enum_B_C_m, _enum_C_p} _class_C_methods;
+typedef enum {_enum_B_C_m, _enum_C_p} _class_C_methods;
 
 void _C_p( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_m,
-   ( void (*)() ) _B_m,
+   ( void (*)() ) _B_m, 
    ( void (*)() ) _C_p
 };
 

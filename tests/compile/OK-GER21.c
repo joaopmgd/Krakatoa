@@ -29,7 +29,7 @@ int _A_get( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_set,
+   ( void (*)() ) _A_set, 
    ( void (*)() ) _A_get
 };
 
@@ -73,8 +73,8 @@ void _Program_run( _class_Program *this ){
 }
 
 Func VTclass_Program[] = {
-   ( void (*)() ) _Program_print,
-   ( void (*)() ) _Program_get,
+   ( void (*)() ) _Program_print, 
+   ( void (*)() ) _Program_get, 
    ( void (*)() ) _Program_run
 };
 

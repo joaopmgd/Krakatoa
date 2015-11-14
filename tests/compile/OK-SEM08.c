@@ -36,8 +36,8 @@ void _A_set( _class_A *this, int _i ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_put,
-   ( void (*)() ) _A_get,
+   ( void (*)() ) _A_put, 
+   ( void (*)() ) _A_get, 
    ( void (*)() ) _A_set
 };
 
@@ -57,7 +57,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_put, _enum_A_B_get, _enum_A_B_set, _enum_B_put} _class_B_methods;
+typedef enum {_enum_A_B_get, _enum_A_B_set, _enum_B_put} _class_B_methods;
 
 void _B_put( _class_B *this, int _a, int _b, boolean _c ){
    if (((_a + _b   ) < 1   ) && !_c)
@@ -67,9 +67,8 @@ void _B_put( _class_B *this, int _a, int _b, boolean _c ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_put,
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
    ( void (*)() ) _B_put
 };
 

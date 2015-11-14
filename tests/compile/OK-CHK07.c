@@ -62,13 +62,13 @@ void _Person_print( _class_Person *this ){
 }
 
 Func VTclass_Person[] = {
-   ( void (*)() ) _Person_getCourse,
-   ( void (*)() ) _Person_setCourse,
-   ( void (*)() ) _Person_getNumber,
-   ( void (*)() ) _Person_setNumber,
-   ( void (*)() ) _Person_init,
-   ( void (*)() ) _Person_getName,
-   ( void (*)() ) _Person_getAge,
+   ( void (*)() ) _Person_getCourse, 
+   ( void (*)() ) _Person_setCourse, 
+   ( void (*)() ) _Person_getNumber, 
+   ( void (*)() ) _Person_setNumber, 
+   ( void (*)() ) _Person_init, 
+   ( void (*)() ) _Person_getName, 
+   ( void (*)() ) _Person_getAge, 
    ( void (*)() ) _Person_print
 };
 
@@ -113,9 +113,9 @@ void _Group_print( _class_Group *this ){
 }
 
 Func VTclass_Group[] = {
-   ( void (*)() ) _Group_set,
-   ( void (*)() ) _Group_getFirst,
-   ( void (*)() ) _Group_getSecond,
+   ( void (*)() ) _Group_set, 
+   ( void (*)() ) _Group_getFirst, 
+   ( void (*)() ) _Group_getSecond, 
    ( void (*)() ) _Group_print
 };
 
@@ -155,7 +155,7 @@ void _University_print( _class_University *this ){
 }
 
 Func VTclass_University[] = {
-   ( void (*)() ) _University_init,
+   ( void (*)() ) _University_init, 
    ( void (*)() ) _University_print
 };
 

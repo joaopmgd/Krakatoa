@@ -31,7 +31,7 @@ int _A_getK( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m1,
+   ( void (*)() ) _A_m1, 
    ( void (*)() ) _A_getK
 };
 
@@ -52,7 +52,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_m1, _enum_A_B_getK, _enum_B_m2, _enum_B_getK} _class_B_methods;
+typedef enum {_enum_A_B_m1, _enum_B_m2, _enum_B_getK} _class_B_methods;
 
 void _B_m2( _class_B *this, int _n ){
    this->_B_k = 2;
@@ -66,9 +66,8 @@ int _B_getK( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_getK,
-   ( void (*)() ) _B_m2,
+   ( void (*)() ) _A_m1, 
+   ( void (*)() ) _B_m2, 
    ( void (*)() ) _B_getK
 };
 
@@ -88,7 +87,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_m1, _enum_A_C_getK, _enum_B_C_m2, _enum_B_C_getK, _enum_C_m3, _enum_C_m4} _class_C_methods;
+typedef enum {_enum_A_C_m1, _enum_B_C_m2, _enum_B_C_getK, _enum_C_m3, _enum_C_m4} _class_C_methods;
 
 void _C_m3( _class_C *this, int _n ){
    _B_m2( (_class_B *) this, 2);
@@ -103,11 +102,10 @@ void _C_m4( _class_C *this, int _n ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_getK,
-   ( void (*)() ) _B_m2,
-   ( void (*)() ) _B_getK,
-   ( void (*)() ) _C_m3,
+   ( void (*)() ) _A_m1, 
+   ( void (*)() ) _B_m2, 
+   ( void (*)() ) _B_getK, 
+   ( void (*)() ) _C_m3, 
    ( void (*)() ) _C_m4
 };
 

@@ -35,8 +35,8 @@ void _A_m3( _class_A *this, int _n ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
+   ( void (*)() ) _A_m1, 
+   ( void (*)() ) _A_m2, 
    ( void (*)() ) _A_m3
 };
 

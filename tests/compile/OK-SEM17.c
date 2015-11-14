@@ -38,7 +38,7 @@ void _A_set( _class_A *this, int _n ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_get,
+   ( void (*)() ) _A_get, 
    ( void (*)() ) _A_set
 };
 

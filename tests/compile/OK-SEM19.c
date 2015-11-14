@@ -68,10 +68,10 @@ void _A_method( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_getAnInt,
-   ( void (*)() ) _A_setAnInt,
-   ( void (*)() ) _A_getAnA,
-   ( void (*)() ) _A_setAnA,
+   ( void (*)() ) _A_getAnInt, 
+   ( void (*)() ) _A_setAnInt, 
+   ( void (*)() ) _A_getAnA, 
+   ( void (*)() ) _A_setAnA, 
    ( void (*)() ) _A_method
 };
 
@@ -93,7 +93,7 @@ _class_B *new_B(void);
 
 int _static_B_staticAnInt;
 
-typedef enum {_enum_A_B_getAnInt, _enum_A_B_setAnInt, _enum_A_B_getAnA, _enum_A_B_setAnA, _enum_A_B_method, _enum_B_method} _class_B_methods;
+typedef enum {_enum_A_B_getAnInt, _enum_A_B_setAnInt, _enum_A_B_getAnA, _enum_A_B_setAnA, _enum_B_method} _class_B_methods;
 
 void _static_B_staticMethod( ){
    _static_B_staticAnInt = 10;
@@ -109,11 +109,10 @@ int _static_B_getAnIntB( ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_getAnInt,
-   ( void (*)() ) _A_setAnInt,
-   ( void (*)() ) _A_getAnA,
-   ( void (*)() ) _A_setAnA,
-   ( void (*)() ) _A_method,
+   ( void (*)() ) _A_getAnInt, 
+   ( void (*)() ) _A_setAnInt, 
+   ( void (*)() ) _A_getAnA, 
+   ( void (*)() ) _A_setAnA, 
    ( void (*)() ) _B_method
 };
 

@@ -176,9 +176,6 @@ public class MessageSendToVariable extends MessageSend {
 
     }
 
-//    ( ( ( void (*)(_class_A *, int ) ) _A->_staticAnA->vt[_enum_A_setAnInt] )( _A, 1) );
-//    ( ( ( void (*)( int ) ) _static_A_staticAnA->vt[_enum_A_setAnInt] )( 1) );
-//    ( ( ( void (*)(int ) )  _static_A_staticAnA->vt[_enum_A_setAnInt] )( _A, 1) );
     public void genC( PW pw, boolean putParenthesis, String className ) {
         if (methodType == null){
             pw.print("_static_"+kraClass.getName()+"_"+this.identifier);

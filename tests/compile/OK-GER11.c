@@ -29,7 +29,7 @@ void _A_m2( _class_A *this, int _n ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m1,
+   ( void (*)() ) _A_m1, 
    ( void (*)() ) _A_m2
 };
 
@@ -49,15 +49,14 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_m1, _enum_A_B_m2, _enum_B_m1} _class_B_methods;
+typedef enum {_enum_A_B_m2, _enum_B_m1} _class_B_methods;
 
 void _B_m1( _class_B *this ){
    printf("%d",4);
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
+   ( void (*)() ) _A_m2, 
    ( void (*)() ) _B_m1
 };
 

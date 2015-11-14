@@ -28,7 +28,7 @@ void _A_m( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_f,
+   ( void (*)() ) _A_f, 
    ( void (*)() ) _A_m
 };
 
@@ -48,7 +48,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_f, _enum_A_B_m, _enum_B_g, _enum_B_p, _enum_B_r, _enum_B_f} _class_B_methods;
+typedef enum {_enum_A_B_m, _enum_B_g, _enum_B_p, _enum_B_r, _enum_B_f} _class_B_methods;
 
 int _B_g( _class_B *this ){
    return 1;
@@ -67,11 +67,10 @@ int _B_f( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_f,
-   ( void (*)() ) _A_m,
-   ( void (*)() ) _B_g,
-   ( void (*)() ) _B_p,
-   ( void (*)() ) _B_r,
+   ( void (*)() ) _A_m, 
+   ( void (*)() ) _B_g, 
+   ( void (*)() ) _B_p, 
+   ( void (*)() ) _B_r, 
    ( void (*)() ) _B_f
 };
 
@@ -91,7 +90,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_f, _enum_A_C_m, _enum_B_C_g, _enum_B_C_p, _enum_B_C_r, _enum_B_C_f, _enum_C_f, _enum_C_g, _enum_C_r} _class_C_methods;
+typedef enum {_enum_A_C_m, _enum_B_C_p, _enum_C_f, _enum_C_g, _enum_C_r} _class_C_methods;
 
 int _C_f( _class_C *this ){
    return 20;
@@ -106,14 +105,10 @@ void _C_r( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_f,
-   ( void (*)() ) _A_m,
-   ( void (*)() ) _B_g,
-   ( void (*)() ) _B_p,
-   ( void (*)() ) _B_r,
-   ( void (*)() ) _B_f,
-   ( void (*)() ) _C_f,
-   ( void (*)() ) _C_g,
+   ( void (*)() ) _A_m, 
+   ( void (*)() ) _B_p, 
+   ( void (*)() ) _C_f, 
+   ( void (*)() ) _C_g, 
    ( void (*)() ) _C_r
 };
 
@@ -136,7 +131,7 @@ _class_D *new_D(void);
 typedef enum {_enum_A_D_f, _enum_A_D_m} _class_D_methods;
 
 Func VTclass_D[] = {
-   ( void (*)() ) _A_f,
+   ( void (*)() ) _A_f, 
    ( void (*)() ) _A_m
 };
 
@@ -167,7 +162,7 @@ void _F_m( _class_F *this ){
 }
 
 Func VTclass_F[] = {
-   ( void (*)() ) _F_f,
+   ( void (*)() ) _F_f, 
    ( void (*)() ) _F_m
 };
 

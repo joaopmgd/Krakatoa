@@ -118,9 +118,6 @@ public class MessageSendToSelf extends MessageSend {
             pw.print(")");
     }
 
-//    this.m();
-//    _a = (_class_A *) ( ( _class_B  * (*)() ) this->vt[0])(this);
-//
     public void genC( PW pw, boolean putParenthesis, String className ) {
         if (putParenthesis){
             pw.print("(");

@@ -66,11 +66,11 @@ this->_A_s = _s;
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m,
-   ( void (*)() ) _A_m_returns_boolean,
-   ( void (*)() ) _A_m_integer,
-   ( void (*)() ) _A_m_integer_boolean_String,
-   ( void (*)() ) _A_m_integer_returns_boolean,
+   ( void (*)() ) _A_m, 
+   ( void (*)() ) _A_m_returns_boolean, 
+   ( void (*)() ) _A_m_integer, 
+   ( void (*)() ) _A_m_integer_boolean_String, 
+   ( void (*)() ) _A_m_integer_returns_boolean, 
    ( void (*)() ) _A_m_integer_boolean_String_return
 };
 
@@ -93,11 +93,11 @@ _class_B *new_B(void);
 typedef enum {_enum_A_B_m, _enum_A_B_m_returns_boolean, _enum_A_B_m_integer, _enum_A_B_m_integer_boolean_String, _enum_A_B_m_integer_returns_boolean, _enum_A_B_m_integer_boolean_String_return} _class_B_methods;
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_m,
-   ( void (*)() ) _A_m_returns_boolean,
-   ( void (*)() ) _A_m_integer,
-   ( void (*)() ) _A_m_integer_boolean_String,
-   ( void (*)() ) _A_m_integer_returns_boolean,
+   ( void (*)() ) _A_m, 
+   ( void (*)() ) _A_m_returns_boolean, 
+   ( void (*)() ) _A_m_integer, 
+   ( void (*)() ) _A_m_integer_boolean_String, 
+   ( void (*)() ) _A_m_integer_returns_boolean, 
    ( void (*)() ) _A_m_integer_boolean_String_return
 };
 
@@ -171,11 +171,11 @@ this->_C_name = _name;
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _C_method,
-   ( void (*)() ) _C_method_returns_boolean,
-   ( void (*)() ) _C_method_integer,
-   ( void (*)() ) _C_method_integer_boolean_String,
-   ( void (*)() ) _C_method_integer_returns_boolean,
+   ( void (*)() ) _C_method, 
+   ( void (*)() ) _C_method_returns_boolean, 
+   ( void (*)() ) _C_method_integer, 
+   ( void (*)() ) _C_method_integer_boolean_String, 
+   ( void (*)() ) _C_method_integer_returns_boolean, 
    ( void (*)() ) _C_method_integer_boolean_String_r
 };
 

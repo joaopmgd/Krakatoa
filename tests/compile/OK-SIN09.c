@@ -40,7 +40,7 @@ void _A_init( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m,
+   ( void (*)() ) _A_m, 
    ( void (*)() ) _A_init
 };
 

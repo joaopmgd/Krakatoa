@@ -32,7 +32,7 @@ int _A_put( _class_A *this, int _n, char *_set ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_set,
+   ( void (*)() ) _A_set, 
    ( void (*)() ) _A_put
 };
 

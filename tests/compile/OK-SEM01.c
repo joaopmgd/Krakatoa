@@ -18,7 +18,7 @@ _class_A *new_A(void);
 
 _class_A* _static_A_a;
 
-typedef enum {_enum_A_m, } _class_A_methods;
+typedef enum {_enum_A_m} _class_A_methods;
 
 void _A_m( _class_A *this ){
    _static_A_a = NULL;
@@ -33,8 +33,7 @@ void _static_A_p( ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m,
-
+   ( void (*)() ) _A_m
 };
 
 _class_A *new_A(){

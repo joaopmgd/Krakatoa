@@ -51,10 +51,10 @@ void _A_s( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_init_A,
-   ( void (*)() ) _A_call_p,
-   ( void (*)() ) _A_call_q,
-   ( void (*)() ) _A_r,
+   ( void (*)() ) _A_init_A, 
+   ( void (*)() ) _A_call_p, 
+   ( void (*)() ) _A_call_q, 
+   ( void (*)() ) _A_r, 
    ( void (*)() ) _A_s
 };
 
@@ -76,7 +76,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_init_A, _enum_A_B_call_p, _enum_A_B_call_q, _enum_A_B_r, _enum_A_B_s, _enum_B_init_B, _enum_B_call_p, _enum_B_call_q, _enum_B_r, _enum_B_s} _class_B_methods;
+typedef enum {_enum_A_B_init_A, _enum_B_init_B, _enum_B_call_p, _enum_B_call_q, _enum_B_r, _enum_B_s} _class_B_methods;
 
 void _B_p( _class_B *this ){
    printf("%d",this->_B_i);
@@ -108,15 +108,11 @@ void _B_s( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_init_A,
-   ( void (*)() ) _A_call_p,
-   ( void (*)() ) _A_call_q,
-   ( void (*)() ) _A_r,
-   ( void (*)() ) _A_s,
-   ( void (*)() ) _B_init_B,
-   ( void (*)() ) _B_call_p,
-   ( void (*)() ) _B_call_q,
-   ( void (*)() ) _B_r,
+   ( void (*)() ) _A_init_A, 
+   ( void (*)() ) _B_init_B, 
+   ( void (*)() ) _B_call_p, 
+   ( void (*)() ) _B_call_q, 
+   ( void (*)() ) _B_r, 
    ( void (*)() ) _B_s
 };
 
@@ -138,7 +134,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_init_A, _enum_A_C_call_p, _enum_A_C_call_q, _enum_A_C_r, _enum_A_C_s, _enum_C_init_C, _enum_C_call_p, _enum_C_call_q, _enum_C_r, _enum_C_s} _class_C_methods;
+typedef enum {_enum_A_C_init_A, _enum_C_init_C, _enum_C_call_p, _enum_C_call_q, _enum_C_r, _enum_C_s} _class_C_methods;
 
 void _C_p( _class_C *this ){
    printf("%d",this->_C_i);
@@ -170,15 +166,11 @@ void _C_s( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_init_A,
-   ( void (*)() ) _A_call_p,
-   ( void (*)() ) _A_call_q,
-   ( void (*)() ) _A_r,
-   ( void (*)() ) _A_s,
-   ( void (*)() ) _C_init_C,
-   ( void (*)() ) _C_call_p,
-   ( void (*)() ) _C_call_q,
-   ( void (*)() ) _C_r,
+   ( void (*)() ) _A_init_A, 
+   ( void (*)() ) _C_init_C, 
+   ( void (*)() ) _C_call_p, 
+   ( void (*)() ) _C_call_q, 
+   ( void (*)() ) _C_r, 
    ( void (*)() ) _C_s
 };
 

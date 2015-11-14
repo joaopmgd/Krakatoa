@@ -1,6 +1,5 @@
 package ast;
 
-import comp.Comp;
 
 /**
  * Created by joao on 29/09/15.

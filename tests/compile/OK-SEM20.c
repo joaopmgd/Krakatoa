@@ -35,9 +35,9 @@ char * _A_m4( _class_A *this, int _i, boolean _ok ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
-   ( void (*)() ) _A_m3,
+   ( void (*)() ) _A_m1, 
+   ( void (*)() ) _A_m2, 
+   ( void (*)() ) _A_m3, 
    ( void (*)() ) _A_m4
 };
 
@@ -57,7 +57,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_m1, _enum_A_B_m2, _enum_A_B_m3, _enum_A_B_m4, _enum_B_m1, _enum_B_m2, _enum_B_mB} _class_B_methods;
+typedef enum {_enum_A_B_m3, _enum_A_B_m4, _enum_B_m1, _enum_B_m2, _enum_B_mB} _class_B_methods;
 
 int _B_m1( _class_B *this, boolean _ok ){
    return 1;
@@ -71,12 +71,10 @@ int _B_mB( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
-   ( void (*)() ) _A_m3,
-   ( void (*)() ) _A_m4,
-   ( void (*)() ) _B_m1,
-   ( void (*)() ) _B_m2,
+   ( void (*)() ) _A_m3, 
+   ( void (*)() ) _A_m4, 
+   ( void (*)() ) _B_m1, 
+   ( void (*)() ) _B_m2, 
    ( void (*)() ) _B_mB
 };
 
@@ -96,7 +94,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_m1, _enum_A_C_m2, _enum_A_C_m3, _enum_A_C_m4, _enum_B_C_m1, _enum_B_C_m2, _enum_B_C_mB, _enum_C_m1, _enum_C_m4, _enum_C_m5} _class_C_methods;
+typedef enum {_enum_A_C_m3, _enum_B_C_m2, _enum_B_C_mB, _enum_C_m1, _enum_C_m4, _enum_C_m5} _class_C_methods;
 
 int _C_m1( _class_C *this, boolean _ok ){
    return 2;
@@ -111,15 +109,11 @@ char * _C_m5( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
-   ( void (*)() ) _A_m3,
-   ( void (*)() ) _A_m4,
-   ( void (*)() ) _B_m1,
-   ( void (*)() ) _B_m2,
-   ( void (*)() ) _B_mB,
-   ( void (*)() ) _C_m1,
-   ( void (*)() ) _C_m4,
+   ( void (*)() ) _A_m3, 
+   ( void (*)() ) _B_m2, 
+   ( void (*)() ) _B_mB, 
+   ( void (*)() ) _C_m1, 
+   ( void (*)() ) _C_m4, 
    ( void (*)() ) _C_m5
 };
 
@@ -142,9 +136,9 @@ _class_D *new_D(void);
 typedef enum {_enum_A_D_m1, _enum_A_D_m2, _enum_A_D_m3, _enum_A_D_m4} _class_D_methods;
 
 Func VTclass_D[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
-   ( void (*)() ) _A_m3,
+   ( void (*)() ) _A_m1, 
+   ( void (*)() ) _A_m2, 
+   ( void (*)() ) _A_m3, 
    ( void (*)() ) _A_m4
 };
 
@@ -164,7 +158,7 @@ struct _class_E{
 _class_E *new_E(void);
 
 
-typedef enum {_enum_A_E_m1, _enum_A_E_m2, _enum_A_E_m3, _enum_A_E_m4, _enum_E_m1, _enum_E_m2, _enum_E_m4} _class_E_methods;
+typedef enum {_enum_A_E_m3, _enum_E_m1, _enum_E_m2, _enum_E_m4} _class_E_methods;
 
 int _E_m1( _class_E *this, boolean _ok ){
    return 5;
@@ -178,12 +172,9 @@ char * _E_m4( _class_E *this, int _i, boolean _ok ){
 }
 
 Func VTclass_E[] = {
-   ( void (*)() ) _A_m1,
-   ( void (*)() ) _A_m2,
-   ( void (*)() ) _A_m3,
-   ( void (*)() ) _A_m4,
-   ( void (*)() ) _E_m1,
-   ( void (*)() ) _E_m2,
+   ( void (*)() ) _A_m3, 
+   ( void (*)() ) _E_m1, 
+   ( void (*)() ) _E_m2, 
    ( void (*)() ) _E_m4
 };
 

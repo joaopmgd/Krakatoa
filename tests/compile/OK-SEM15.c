@@ -28,7 +28,7 @@ void _A_accept( _class_A *this, _class_A *_x ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_print,
+   ( void (*)() ) _A_print, 
    ( void (*)() ) _A_accept
 };
 
@@ -55,8 +55,8 @@ void _B_m( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_print,
-   ( void (*)() ) _A_accept,
+   ( void (*)() ) _A_print, 
+   ( void (*)() ) _A_accept, 
    ( void (*)() ) _B_m
 };
 

@@ -47,9 +47,9 @@ int _A_getInt( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_setInt,
+   ( void (*)() ) _A_get, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _A_setInt, 
    ( void (*)() ) _A_getInt
 };
 

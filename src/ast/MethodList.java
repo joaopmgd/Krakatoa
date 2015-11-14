@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class MethodList {
 
     public Method searchNameMethod(String run){
-        for(Method method : methodList){
+        for(Method method : this.methodList){
             if (method.getName().equals(run)) {
                 return method;
             }
@@ -17,7 +17,7 @@ public class MethodList {
     }
 
     public Method search(String name, TypeList typeList, boolean isStatic){
-        for(Method method : methodList){
+        for(Method method : this.methodList){
             if (method.getName().equals(name)) {
                 if (isStatic && method.isStatic()){
                     return method;
@@ -32,7 +32,7 @@ public class MethodList {
     }
 
     public Method searchDeclaration(Type type, String name, TypeList typeList, boolean isStatic, boolean superClass){
-        for(Method method : methodList){
+        for(Method method : this.methodList){
             if (method.getName().equals(name)) {
                 if (superClass){
                     if(typeList.compareTo(method.getParamList().getTypeList()) != 0){
@@ -71,67 +71,24 @@ public class MethodList {
         }
     }
 
-    public void genMethodNameC(PW pw, String className, boolean commaFirst){
-        int size = this.methodList.size();
-        for(Method m: methodList) {
+    public EnumList getEnum(String className){
+        EnumList enumList = new EnumList();
+        for (Method m : this.methodList){
             if (!m.isStatic()) {
-                if (size > 0 && commaFirst) {
-                    pw.println(",");
-                    m.genMethodNameC(pw, className);
-                } else if (!commaFirst) {
-                    m.genMethodNameC(pw, className);
-                    if (--size > 0 ) {
-                        pw.println(",");
-                    }
-                }
-            }
-            else{
-                --size;
+                enumList.add(new EnumMethod(m.getName(),className,null));
             }
         }
+        return enumList;
     }
 
-    public boolean checkIfThereIsElements (){
-        for (Method method: methodList){
-            if (!(method.isStatic())){
-                return true;
+    public EnumList getEnumSuper(EnumList enumList, String className, String superClassName){
+        EnumList newEnumList = new EnumList();
+        for (Method m : this.methodList){
+            if (!m.isStatic() && !enumList.check(m.getName())) {
+                newEnumList.add(new EnumMethod(m.getName(),className,superClassName));
             }
         }
-        return false;
-    }
-
-    public void genMethodListC(PW pw, String className, boolean commaFirst){
-        int size = this.methodList.size();
-        for ( Method m : methodList ) {
-            if (!m.isStatic()) {
-                if (size > 0 && commaFirst)
-                    pw.print(", _enum_" + className + "_" + m.getName());
-                else if (!commaFirst) {
-                    pw.print("_enum_" + className + "_" + m.getName());
-                    if (--size > 0)
-                        pw.print(", ");
-                }
-            }else{
-                --size;
-            }
-        }
-    }
-
-    public void genSuperMethodListC(PW pw, String superClassName, boolean commaFirst, String className){
-        int size = this.methodList.size();
-        for ( Method m : methodList ) {
-            if (!m.isStatic()) {
-                if (size > 0 && commaFirst)
-                    pw.print(", _enum_" + superClassName + "_" + className + "_" + m.getName());
-                else if (!commaFirst) {
-                    pw.print("_enum_" + superClassName + "_" + className + "_" + m.getName());
-                    if (--size > 0)
-                        pw.print(", ");
-                }
-            }else{
-                --size;
-            }
-        }
+        return newEnumList;
     }
 
     public MethodList() {
@@ -144,10 +101,6 @@ public class MethodList {
 
     public int getSize() {
         return methodList.size();
-    }
-
-    public ArrayList<Method> getMethodList() {
-        return methodList;
     }
 
     private ArrayList<Method> methodList;

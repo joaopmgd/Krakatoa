@@ -37,9 +37,9 @@ void _A_init( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_print,
+   ( void (*)() ) _A_get_A, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _A_print, 
    ( void (*)() ) _A_init
 };
 
@@ -60,7 +60,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_get_A, _enum_A_B_set, _enum_A_B_print, _enum_A_B_init, _enum_B_get_B, _enum_B_init, _enum_B_print} _class_B_methods;
+typedef enum {_enum_A_B_get_A, _enum_A_B_set, _enum_B_get_B, _enum_B_init, _enum_B_print} _class_B_methods;
 
 int _B_get_B( _class_B *this ){
    return this->_B_k;
@@ -78,12 +78,10 @@ void _B_print( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_print,
-   ( void (*)() ) _A_init,
-   ( void (*)() ) _B_get_B,
-   ( void (*)() ) _B_init,
+   ( void (*)() ) _A_get_A, 
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _B_get_B, 
+   ( void (*)() ) _B_init, 
    ( void (*)() ) _B_print
 };
 
@@ -103,17 +101,16 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_get_A, _enum_A_C_set, _enum_A_C_print, _enum_A_C_init, _enum_C_get_A} _class_C_methods;
+typedef enum {_enum_A_C_set, _enum_A_C_print, _enum_A_C_init, _enum_C_get_A} _class_C_methods;
 
 int _C_get_A( _class_C *this ){
    return 0;
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_set,
-   ( void (*)() ) _A_print,
-   ( void (*)() ) _A_init,
+   ( void (*)() ) _A_set, 
+   ( void (*)() ) _A_print, 
+   ( void (*)() ) _A_init, 
    ( void (*)() ) _C_get_A
 };
 

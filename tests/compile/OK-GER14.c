@@ -29,7 +29,7 @@ void _A_init( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_get_A,
+   ( void (*)() ) _A_get_A, 
    ( void (*)() ) _A_init
 };
 
@@ -50,7 +50,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_get_A, _enum_A_B_init, _enum_B_get_B, _enum_B_init} _class_B_methods;
+typedef enum {_enum_A_B_get_A, _enum_B_get_B, _enum_B_init} _class_B_methods;
 
 int _B_get_B( _class_B *this ){
    return this->_B_k;
@@ -62,9 +62,8 @@ void _B_init( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_init,
-   ( void (*)() ) _B_get_B,
+   ( void (*)() ) _A_get_A, 
+   ( void (*)() ) _B_get_B, 
    ( void (*)() ) _B_init
 };
 
@@ -85,7 +84,7 @@ struct _class_C{
 _class_C *new_C(void);
 
 
-typedef enum {_enum_A_C_get_A, _enum_A_C_init, _enum_B_C_get_B, _enum_B_C_init, _enum_C_get_C, _enum_C_init} _class_C_methods;
+typedef enum {_enum_A_C_get_A, _enum_B_C_get_B, _enum_C_get_C, _enum_C_init} _class_C_methods;
 
 int _C_get_C( _class_C *this ){
    return this->_C_k;
@@ -97,11 +96,9 @@ void _C_init( _class_C *this ){
 }
 
 Func VTclass_C[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_init,
-   ( void (*)() ) _B_get_B,
-   ( void (*)() ) _B_init,
-   ( void (*)() ) _C_get_C,
+   ( void (*)() ) _A_get_A, 
+   ( void (*)() ) _B_get_B, 
+   ( void (*)() ) _C_get_C, 
    ( void (*)() ) _C_init
 };
 
@@ -122,7 +119,7 @@ struct _class_D{
 _class_D *new_D(void);
 
 
-typedef enum {_enum_A_D_get_A, _enum_A_D_init, _enum_B_D_get_B, _enum_B_D_init, _enum_C_D_get_C, _enum_C_D_init, _enum_D_get_D, _enum_D_init} _class_D_methods;
+typedef enum {_enum_A_D_get_A, _enum_B_D_get_B, _enum_C_D_get_C, _enum_D_get_D, _enum_D_init} _class_D_methods;
 
 int _D_get_D( _class_D *this ){
    return this->_D_k;
@@ -134,13 +131,10 @@ void _D_init( _class_D *this ){
 }
 
 Func VTclass_D[] = {
-   ( void (*)() ) _A_get_A,
-   ( void (*)() ) _A_init,
-   ( void (*)() ) _B_get_B,
-   ( void (*)() ) _B_init,
-   ( void (*)() ) _C_get_C,
-   ( void (*)() ) _C_init,
-   ( void (*)() ) _D_get_D,
+   ( void (*)() ) _A_get_A, 
+   ( void (*)() ) _B_get_B, 
+   ( void (*)() ) _C_get_C, 
+   ( void (*)() ) _D_get_D, 
    ( void (*)() ) _D_init
 };
 

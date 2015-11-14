@@ -21,10 +21,6 @@ public class KraClass extends Type {
       this.privateMethodList = new PrivateMethodList();
    }
 
-   public int getPublicMethodQuantity(){
-      return publicMethodList.getSize();
-   }
-
    public int validateProgram(){
       if (!this.getName().equals("Program")){
          return 1;
@@ -163,10 +159,6 @@ public class KraClass extends Type {
       return super.getName();
    }
 
-   public String getSuperClassName(){
-      return superClass.getName();
-   }
-
    public KraClass getSuperclass() {
       return superClass;
    }
@@ -216,34 +208,23 @@ public class KraClass extends Type {
       pw.println("");
    }
 
-   public void genCSuperClass(PW pw, String className){
-      boolean commaFirst = true;
-      if (superClass != null){
-         this.superClass.genCSuperClass(pw, className);
+   public EnumList genEnum(String className){
+      EnumList enumList = new EnumList();
+      enumList.getMethodName(className, this.publicMethodList);
+      if (this.superClass != null){
+         enumList = this.superClass.genEnumSuper(enumList, className, this.superClass.getName());
       }
-      if (superClass == null || superClass.getPublicMethodQuantity() == 0){
-         commaFirst = false;
-      }
-      this.publicMethodList.genSuperMethodListC(pw, this.getName(), commaFirst, className);
+      return enumList;
    }
 
-   public void genMethodNameC(PW pw, boolean commaFirst){
-      if (superClass != null){
-         commaFirst = true;
-         this.superClass.genMethodNameC(pw,false);
+   public EnumList genEnumSuper(EnumList enumList, String className, String superClassName){
+      EnumList newEnumList = new EnumList();
+      newEnumList.getMethodNameSuper(enumList, className, superClassName, this.publicMethodList);
+      enumList.addAll(newEnumList);
+      if (this.superClass != null){
+         return this.superClass.genEnumSuper(enumList, className, this.superClass.getName());
       }
-      this.publicMethodList.genMethodNameC(pw, this.getName(), commaFirst);
-   }
-
-   public boolean checkIfThereIsElements(){
-      boolean check = false;
-      if (superClass != null) {
-         check = this.superClass.checkIfThereIsElements();
-      }
-      if (this.publicMethodList.checkIfThereIsElements()){
-         check = true;
-      }
-      return check;
+      return enumList;
    }
 
    public void genC(PW pw) {
@@ -256,18 +237,11 @@ public class KraClass extends Type {
       pw.printlnIdent("};\n");
       pw.printlnIdent("_class_" + this.getName() + " *new_" + this.getName() + "(void);\n");
       this.instanceVariableList.genC(pw, this.getName(), true);
-      boolean commaFirst;
 
-      if (this.checkIfThereIsElements()) {
+      EnumList enumList = this.genEnum(this.getName());
+      if (enumList.size() != 0){
          pw.printIdent("typedef enum {");
-         commaFirst = true;
-         if (superClass != null) {
-            this.superClass.genCSuperClass(pw, this.getName());
-         }
-         if (superClass == null || superClass.getPublicMethodQuantity() == 0) {
-            commaFirst = false;
-         }
-         this.publicMethodList.genMethodListC(pw, this.getName(), commaFirst);
+         enumList.genCEnum(pw);
          pw.println("} _class_" + this.getName() + "_methods;\n");
       }
 
@@ -275,16 +249,11 @@ public class KraClass extends Type {
       this.publicMethodList.genC(pw, this.getName());
 
       pw.printlnIdent("Func VTclass_" + this.getName() + "[] = {");
-      pw.add();
-      commaFirst = true;
-      if (superClass != null){
-         this.superClass.genMethodNameC(pw,false);
+      if (enumList.size() != 0){
+         pw.add();
+         enumList.genCVT(pw);
+         pw.sub();
       }
-      if (superClass == null || superClass.getPublicMethodQuantity() == 0){
-         commaFirst = false;
-      }
-      this.publicMethodList.genMethodNameC(pw, this.getName(), commaFirst);
-      pw.sub();
       pw.printlnIdent("\n};\n");
 
       pw.printlnIdent("_class_" + this.getName() + " *new_" + this.getName() + "(){");

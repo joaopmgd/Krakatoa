@@ -29,7 +29,7 @@ int _A_get( _class_A *this ){
 }
 
 Func VTclass_A[] = {
-   ( void (*)() ) _A_put,
+   ( void (*)() ) _A_put, 
    ( void (*)() ) _A_get
 };
 
@@ -70,9 +70,9 @@ _class_A _No_get( _class_No *this ){
 }
 
 Func VTclass_No[] = {
-   ( void (*)() ) _No_setNext,
-   ( void (*)() ) _No_getNext,
-   ( void (*)() ) _No_set,
+   ( void (*)() ) _No_setNext, 
+   ( void (*)() ) _No_getNext, 
+   ( void (*)() ) _No_set, 
    ( void (*)() ) _No_get
 };
 
@@ -94,7 +94,7 @@ struct _class_B{
 _class_B *new_B(void);
 
 
-typedef enum {_enum_A_B_put, _enum_A_B_get, _enum_B_get, _enum_B_init, _enum_B_buildList, _enum_B_list} _class_B_methods;
+typedef enum {_enum_A_B_put, _enum_B_get, _enum_B_init, _enum_B_buildList, _enum_B_list} _class_B_methods;
 
 int _B_get( _class_B *this ){
    printf("%d",this->_B_k);
@@ -146,11 +146,10 @@ void _B_list( _class_B *this ){
 }
 
 Func VTclass_B[] = {
-   ( void (*)() ) _A_put,
-   ( void (*)() ) _A_get,
-   ( void (*)() ) _B_get,
-   ( void (*)() ) _B_init,
-   ( void (*)() ) _B_buildList,
+   ( void (*)() ) _A_put, 
+   ( void (*)() ) _B_get, 
+   ( void (*)() ) _B_init, 
+   ( void (*)() ) _B_buildList, 
    ( void (*)() ) _B_list
 };
 
